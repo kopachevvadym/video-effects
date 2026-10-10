@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gesture Effects — Program</title>
+    <style>
+      html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+      video { width: 100vw; height: 100vh; object-fit: contain; display: block; }
+      #wait {
+        position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+        color: #8b93a5; font: 15px -apple-system, BlinkMacSystemFont, sans-serif; text-align: center; line-height: 1.6;
+      }
+      #wait.hidden { display: none; }
+    </style>
+  </head>
+  <body>
+    <video id="video" autoplay muted playsinline></video>
+    <div id="wait">Waiting for the Gesture Flow editor…<br />Open http://localhost:8001</div>
+    <script type="module" src="/src/program/main.js"></script>
+  </body>
+</html>

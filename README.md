@@ -1,168 +1,189 @@
-# Gesture Effects
+# Gesture Flow
 
-Real-time video effects triggered by hand gestures and facial expressions, right in the browser: camera → MediaPipe finds 21 points on each hand and 478 points on the face → your rules recognize a gesture → an effect is drawn on top of the video.
+Real-time webcam effects triggered by hand gestures and facial expressions, configured in a node editor built with [React Flow](https://reactflow.dev). Gestures are wired to reactions, combined with logic and timing nodes, and routed into one or more virtual cameras; the active camera is sent to OBS and on to Zoom / Meet / Telegram.
 
-No build step, no dependencies to install — plain ES modules + Canvas 2D. The UI is in Ukrainian.
+The UI is available in Ukrainian and English (click the flag) with light and dark themes (☀️ / 🌙). Claude can edit the graph with prompts through a local MCP server, and in-browser agents through WebMCP.
 
 ## Running
 
-1. Double-click `start.command` (or run `python3 -m http.server 8001` in this folder).
+1. Double-click `start.command` (first run installs dependencies), or run `npm install && npm run dev`.
 2. `http://localhost:8001` opens. Allow camera access.
 3. The first run downloads the hand and face models (~12 MB) from the internet.
 
-If macOS refuses to run `start.command`: right-click → Open.
+Requires Node.js 18+. If macOS refuses to run `start.command`: right-click → Open.
 
-Works best in Chrome-based browsers. Safari works too.
+## How the editor works
 
-## Gestures
+```
+[gesture] ──signal──▶ [logic] ──signal──▶ [reaction] ──video──▶ [camera] ──video──▶ [camera (merge)]
+```
 
-| Key | Gesture | Effect |
+- **Gesture nodes** (hands, face, hands + face, objects, manual) watch the camera and output a signal while the gesture is held. Each has `hold` (frames to hold before it counts; ~30 frames = 1 s) and `dropout tolerance`.
+- **Hand selection**: every single-hand gesture has *Hand: any / left / right / both*. `both` means both hands must show the gesture. If left and right are swapped on your camera, flip *Settings → Swap left and right hand*.
+- **Logic & timing**: AND (together), OR, NOT, *Combo: A then B* (within a time window), Delay, Hold at least, Extend, Toggle, Every Nth time.
+- **Switches**: a *Switch* node is on by default; click it on the node (or press its key) to turn off everything wired to its `enable` output. Default graph: *Mouth* (key `M`) disables the three mouth reactions, *Hat* disables hat spawning.
+- **States**: named true/false variables shared by the whole graph. *Set state* turns a state on / off / toggles it; *State is on?* outputs a signal while it is on. The states bar at the top shows current values; click a chip to flip it manually.
+- **enable / block inputs**: every gesture and reaction has them. If `enable` is connected, the node only works while that signal is on; while `block` is on, it is off. Example from the default graph: finger drawing only works while the `drawing` state is on (toggled with two fists), and it is blocked while you aim the laser or touch your nose.
+- **Reactions** fire once per gesture (with delay, cooldown and chance) or run continuously while the signal is on (energy ball, laser, light trail, fire, bubbles). Common settings: where (gesture point, nose, forehead, mouth, eyes, frame center), size, intensity, color. The **▶ Test** button fires a reaction without a gesture. The `fired` output lets one reaction trigger the next.
+- **Cameras**: a reaction is visible only in the cameras it is connected to (red dashed links). A node can feed several cameras. Connecting a camera into another camera **merges** them: the target shows its own reactions plus everything from its inputs. One camera is active (**ON AIR**) — switch with `Alt+1…9` (set per camera), the chips in the top bar, or *Make active*. Each camera has its own resolution, background (camera / green screen / black), fullscreen, recording.
+
+Live status: a yellow dot and glowing links show signals that are on; the progress bar shows how long a gesture has been held. *Settings → Show hand and face points* also prints each node's measured values (e.g. `pinch=0.22`) for tuning thresholds.
+
+The graph autosaves in the browser. The **⋯** menu has **Export / Import** (JSON) and **Reset** (restores the default graph).
+
+## Motions
+
+Gesture nodes look at one frame (a pose). **Motion** nodes look at the last fraction of a second of movement and fire once per movement:
+
+| Node | What it detects | Main settings |
 |---|---|---|
-| **Hands** | | |
-| 1 | 🤲 Two open palms apart | Energy ball with lightning to the fingertips; spread hands — it grows; drop them — it bursts |
-| 5 | ✊→🖐 Make a fist and snap it open | Explosion: flash, shockwave, embers, camera shake |
-| 6 | 👌 "OK" sign (other fingers straight) | Portal: rings expanding outward, sparks spiralling inward |
-| 7 | 🤙 Shaka (thumb + pinky) | Shooting stars across the whole screen |
-| 0 | ☝️ Index finger only | Light trail following the fingertip |
-| **Hands + face** | | |
-| 2 | 🎯 One eye closed + index finger | Laser from the open eye through the fingertip (left eye closed — red, right — green) |
-| 3 | 👃 Touch your nose | Clown nose for 3 seconds (follows the head) + "БІП!" |
-| 4 | 🤦 Palm on forehead (facepalm) | "Sorrow": anime tear streams, blue melancholic tint, "жаль…". A `dizzy` effect (stars circling the head) is also in `touchFx.js` — swap it in `config.js` |
-| **Eyes** | | |
-| 8 / 9 | 😉 Wink left / right eye | Gold / turquoise glint in the eye |
-| **Eyebrows** | | |
-| Q | 😲 Raise both eyebrows | Anime speed lines around the head + "!!" |
-| W / E | 🤨 Raise left / right eyebrow | "?" above that eyebrow |
-| R | 😠 Frown | Red vignette, steam from the head, 💢 |
-| **Mouth** | | |
-| T | 😮 Open mouth wide | Fire breath — goes where the head is turned |
-| Y | 😁 Big smile | Sun rays around the head |
-| U | 😗 Pucker lips | Soap bubbles from the mouth |
+| 👋 Hand swipe | a fast straight move up / down / left / right | direction, hand, hand pose (any / open / fist / index finger), length in palm widths, max time |
+| 🙋 Wave hand | an open palm going left-right several times | swings, swing size |
+| 🔄 Hand circle | drawing a circle (by default with the index finger) | clockwise / counter-clockwise / any, min radius |
+| 🫸 Push / pull | the hand moving toward / away from the camera (it grows / shrinks) | direction, size change |
+| 💨 Fast hand movement | continuous: on while the hand moves faster than a threshold | speed |
+| 🙂 Head nod / shake | "yes" (pitch) or "no" (yaw) head movement | sensitivity, number of movements |
 
-Keys work with any keyboard layout. One-shot effects fire once per gesture: release the gesture and show it again to repeat.
+Distances are measured in palm widths, so a swipe works the same close to the camera and far from it. To get **different reactions per direction**, add one *Hand swipe* node per direction. After a swipe, the hand's way back (the opposite direction within 0.6 s) is ignored, so swiping up does not also fire "down".
 
-Gestures that already exist in macOS built-in **Reactions** (heart, 👍/👎, ✌️, two-hand rock-on) are intentionally not used here. If Reactions are enabled (Control Center → Video Effects), macOS draws its own effects directly into the camera feed, so they will show up here too.
+Two reactions are made for motions: **Swipe swoosh** (a glowing streak along the actual path of the hand; gold / blue / pink / green per direction unless a color is set) and **Text / emoji** (any text, e.g. `👋 Hi!`).
 
-The keys in the table fire an effect at the cursor without a gesture — handy when building a new effect. Continuous effects (1, 2, 0, T, U) must be held while moving the mouse.
+## Objects (hats & co.)
 
-- `D` — show hand and face points plus the numbers gestures use (for tuning thresholds).
-- `G` — crosshair where you are looking.
-- `C` — calibrate: look at the center of the screen with a neutral face and press (gaze + neutral eyebrow height).
-- `H` — hide the panel (e.g. for screen recording).
-- **● Запис** (Record) — records the video with effects to a file (without the panel).
+*Spawn object* creates a top hat, party hat, crown, sunglasses or mustache — in your hand, right on your head, or at the gesture point. Bring an object in your hand close to its place on the head and it snaps on (hat → top of the head, glasses → eyes, mustache → upper lip) and follows the head: position, tilt and size. Pinch it to take it back. If you let go away from the head it floats, falls or vanishes (setting of the node). *Object on head* / *Object in hand* are gesture nodes, so wearing a hat can trigger other reactions. *Remove objects* clears them.
 
-## Structure
+Default graph: 🤟 spawns a top hat in your hand; wearing it makes a glint; closing both eyes for a second removes objects.
+
+## Sending to Zoom / Meet / Telegram (OBS)
+
+A browser cannot register a system camera by itself, so the active camera goes through OBS:
+
+1. In OBS, add a **Browser** source with URL `http://localhost:8001/program.html` (the **OBS** panel in the editor has a copy button), size 1280×720 or 1920×1080, then *Transform → Fit to screen*.
+2. The page receives the active camera over WebRTC from the open editor tab (peer-to-peer on this machine, H.264 hardware encoding where available). Only one editor tab streams; others show *standby* and can take over.
+3. Click **Start Virtual Camera** in OBS and choose **OBS Virtual Camera** in Zoom / Meet / Telegram / a browser call (reload the call page after starting the virtual camera).
+
+Optional: connect the editor to OBS WebSocket (**Tools → WebSocket Server Settings**, then **OBS → Connect** in the editor) to start the virtual camera from the editor and to set an *OBS scene* on each camera node — switching the active camera then also switches the OBS scene.
+
+The editor keeps processing while its tab is hidden or on another desktop (camera frames are pulled with `MediaStreamTrackProcessor`, timers run in a worker), so the OBS feed does not freeze.
+
+## Controlling it with Claude (MCP)
+
+`mcp/server.js` is a local [MCP](https://modelcontextprotocol.io) server. Claude starts it, and it forwards tool calls to the open editor over a local WebSocket (`127.0.0.1:8789`, only pages from this machine may connect):
+
+```
+Claude Desktop / Claude Code ──MCP (stdio)──▶ mcp/server.js ──WebSocket──▶ editor tab (http://localhost:8001)
+```
+
+**Claude Desktop:** run `npm run mcp:install-desktop` once (adds `gesture-flow` to `claude_desktop_config.json`, with a backup), restart Claude Desktop.
+**Claude Code:** `claude mcp add gesture-flow -- node /absolute/path/to/mcp/server.js`.
+
+Then keep the editor open — the top bar shows **✳ Claude** when connected — and ask in plain language, for example:
+
+- “In Gesture Flow, make a portal appear when I pinch with my left hand.”
+- “Add a camera called Stream that merges Hands and Face and make it active.”
+- “Delay the explosion by one second and make it twice as big.”
+- “Turn off the mouth effects.”
+
+Tools: `gesture_flow_help`, `list_node_types`, `get_graph`, `get_live_status`, `add_node`, `update_node`, `remove_node`, `connect`, `disconnect`, `add_rule`, `set_active_camera`, `set_state`, `set_switch`, `test_reaction` (all prefixed `gesture_flow_`). They are defined once in `src/agent/tools.js`. *Settings → Allow control from Claude (MCP)* turns the bridge off.
+
+claude.ai in the browser cannot reach a server on your computer; use Claude Desktop or Claude Code.
+
+## WebMCP (agents inside the browser)
+
+The same tools are registered with [WebMCP](https://developer.chrome.com/docs/ai/webmcp/imperative-api) (`document.modelContext.registerTool`) when the browser supports it — Chrome with `chrome://flags/#enable-webmcp-testing` or the origin trial. A **🤖 WebMCP** badge appears in the top bar. The API is still a draft and may change.
+
+## Default graph
+
+| Gesture | Reaction | Camera |
+|---|---|---|
+| 🤲 Two palms apart | Energy ball | Hands |
+| 😉 Wink **AND** ☝️ index finger | Eye laser | Hands |
+| ✊→🖐 Fist, snap open | Explosion | Hands |
+| 👌 OK sign | Portal | Hands |
+| 🤙 Shaka | Shooting stars | Hands |
+| ✊✊ Two fists | Toggle the `drawing` state | — |
+| ☝️ Index finger (only while `drawing` is on) | Light trail | Hands |
+| 🤟 I love you | Top hat in your hand | Hands |
+| 🎩 Object on head | Glint on the forehead | Hands |
+| 😌 Both eyes closed ~1 s | Remove objects | Hands |
+| 👃 Touch nose | Clown nose | Face |
+| 🤦 Palm on forehead | Sorrow (tears) | Face |
+| 🫡 Index finger to the temple | Mind waves | Face |
+| 😉 Wink left / right | Gold / turquoise glint | Face |
+| 😲 Both eyebrows up | "!!" | Face |
+| 🤨 Left / right eyebrow up | "?" | Face |
+| 😠 Frown | Anger | Face |
+| 😮 Mouth wide open | Fire breath | Face |
+| 😁 Big smile | Sun rays | Face |
+| 😗 Pucker | Bubbles | Face |
+| ⬆️ Swipe up / ⬇️ down / ⬅️ left / ➡️ right | Swoosh: gold / blue / pink / green | Hands |
+| 🙋 Wave | "👋 Hi!" | Hands |
+| 🔄 Circle with the index finger | Portal | Hands |
+| 🫸 Push toward the camera | Small explosion | Hands |
+| 🙂 Nod / shake the head | "✓ Yes" / "✗ No" | Face |
+
+Switches: **Mouth** (`M`) → the three mouth gestures, **Hat** → the 🤟 hat gesture, **Motions** (`N`) → all motion nodes. Hand motions also pause while `drawing` is on.
+
+Cameras: **Hands** (`Alt+1`), **Face** (`Alt+2`) and **All together** (`Alt+3`, merges the two, active by default).
+
+Gestures that exist in macOS built-in **Reactions** (heart, 👍/👎, ✌️, two-hand rock-on) are not used by default. If Reactions are enabled (Control Center → Video Effects), macOS draws its own effects into the camera feed, so they show up here too.
+
+## Project structure
 
 ```
 src/
-  config.js        ← which gesture triggers which effect (main file)
-  gestures/        ← gestures: detect(hands, debug, face) returns a position or null
-  effects/         ← effects: trigger(fx, hit) adds particles to the screen
-  engine.js        ← stabilization: hold N frames, cooldown, exclusive gestures
-  geometry.js      ← hand point indices and helpers
-  face.js          ← eyes, eyebrows, mouth, head pose, gaze point
-  tracker.js       ← MediaPipe (hands + face)
-  main.js          ← camera, frame loop, drawing, recording
+  app/               React UI: editor, nodes, panels, i18n, storage
+  graph/
+    catalog.js       registry of node kinds, ports
+    gestures.js      gesture nodes (detect → hit or null)
+    motion.js        motion nodes (swipe, wave, circle, push, speed, nod / shake)
+    logic.js         logic, timing and state nodes
+    effects.js       reaction nodes and the camera node
+    engine.js        runs the graph every frame
+    defaultGraph.js  the graph you get on first launch
+  runtime/
+    runtime.js       camera, MediaPipe, per-camera rendering, program window, recording
+    tracker.js       MediaPipe hands + face
+    face.js          eyes, eyebrows, mouth, head pose, gaze
+    props.js         attachable objects (+ propsArt.js drawings)
+    effects/         the visual effects (Canvas 2D)
+    obs.js           obs-websocket v5 client
+  agent/tools.js     tools for Claude (MCP) and WebMCP
+mcp/
+  server.js          MCP server for Claude Desktop / Code (stdio ↔ WebSocket bridge)
+  install-claude-desktop.mjs
+test/
+  engine.test.mjs    graph engine tests with synthetic hands (npm test)
+  mcp-e2e.mjs        MCP client → server → browser editor (needs Playwright)
 ```
 
-## Adding your own gesture
+## Adding a new gesture node
 
-**1. Gesture** — `src/gestures/fist.js`:
+Add an object to `GESTURES` in `src/graph/gestures.js` — it appears in the palette automatically:
 
 ```js
-import { INDEX, MIDDLE, RING, PINKY, isFolded } from "../geometry.js";
-
-export const fist = {
-  name: "fist",
-  label: "✊ Fist",
-  holdFrames: 8,      // how many consecutive frames to hold the gesture (~30 frames = 1 s)
-  cooldownMs: 1500,   // minimum pause between triggers
-  // mode: "continuous", // if the effect should run while the gesture is held (like the finger trail)
-
-  detect(hands, debug) {
-    for (const h of hands) {
-      if ([INDEX, MIDDLE, RING, PINKY].every((f) => isFolded(h, f))) {
-        const p = h.points[9]; // palm center
-        return { x: p.x, y: p.y, size: h.size };
-      }
-    }
-    return null;
-  },
+const thumbsSideways = {
+  kind: "thumbsSideways",
+  category: "hand",
+  icon: "👉",
+  title: { uk: "Палець убік", en: "Thumb sideways" },
+  params: [handParam(), num("min", { uk: "Поріг", en: "Threshold" }, 0.6, 0.1, 2)],
+  hold: 6,
+  detect: ({ hands }, p, state, debug) =>
+    forHands(hands, p.hand, (h) => {
+      const dx = (h.points[4].x - h.points[2].x) / h.size;
+      debug.push(`dx=${dx.toFixed(2)}`);
+      return Math.abs(dx) > p.min ? { ...h.points[4], size: h.size } : null;
+    }),
 };
 ```
 
-What `hands[i]` contains:
-- `points` — 21 points in screen pixels (already mirrored);
-- `size` — palm length in pixels (express all thresholds as fractions of `size`);
-- `gesture` / `gestureScore` — the model's built-in gesture: `Closed_Fist`, `Open_Palm`, `Pointing_Up`, `Thumb_Down`, `Thumb_Up`, `Victory`, `ILoveYou`.
+`detect` receives `{ hands, face, now, W, H, keys, props, vars }`. Each hand has `side` (`left`/`right`), 21 `points` in pixels (mirrored) and `size` (palm length). The face object is described at the top of `src/runtime/face.js` (`winking`, `brows`, `mouth`, `yaw/pitch/roll`, `gaze`, `blend` with 52 MediaPipe expression scores).
 
-The point map is at the top of `src/geometry.js`.
+New reactions go to `src/graph/effects.js`: an effect is `trigger(fxLayer, hit)` that adds particles with `update(dt)` / `draw(ctx)` (see `src/runtime/effects/portal.js`).
 
-**2. Effect** — copy `src/effects/portal.js` and change what is drawn. Each particle is an object with `update(dt)` (returns `false` when the particle should disappear) and `draw(ctx)` (plain Canvas 2D).
+## Notes
 
-**3. Wire it up** in `src/config.js`:
-
-```js
-import { fist } from "./gestures/fist.js";
-import { myEffect } from "./effects/myEffect.js";
-// ...
-{ gesture: fist, effect: myEffect },
-```
-
-## Face, eyes and gaze
-
-`src/face.js` turns MediaPipe's 478 face points into meaningful values. Every gesture receives them as the third `face` argument:
-
-| Field | Meaning |
-|---|---|
-| `face.leftEye.closed`, `face.rightEye.closed` | eye is closed (left = your left) |
-| `face.winking` | `"left"`, `"right"` or `null` (a normal blink doesn't count) |
-| `face.leftEye.ear` | how open the eye is (≈0.25–0.35 open, <0.12 closed) |
-| `face.yaw`, `face.pitch`, `face.roll` | head turn left/right, up/down, tilt (°) |
-| `face.gaze` | point on the screen you are looking at (pixels) |
-| `face.zone` | gaze zone: `ліво` (left), `центр` (center), `право` (right), `верх-ліво` (top-left), `низ-центр` (bottom-center)… |
-| `face.brows.left.raise` | how far the eyebrow is raised relative to neutral (0 — neutral, 0.12+ — raised, negative — lowered) |
-| `face.brows.bothRaised`, `face.brows.raisedOne`, `face.brows.frown` | both raised / one raised (`"left"`/`"right"`) / frowning |
-| `face.mouth.open` | mouth openness (≈0 closed, 0.1–0.3 talking, 0.5+ wide open) |
-| `face.mouth.isOpen`, `isSmiling`, `isPuckered` | wide open / smiling / puckered |
-| `face.nose`, `face.ears.left`, `face.ears.right`, `face.top` | nose tip, approximate ear positions (estimated), top of the forehead |
-| `face.blend` | MediaPipe's 52 expression scores: `mouthSmileLeft`, `jawOpen`, `browInnerUp`, `cheekPuff`, etc. |
-
-Example of a custom "puff your cheeks" gesture:
-
-```js
-export const cheekPuff = {
-  name: "cheekPuff",
-  label: "🐡 Puff cheeks",
-  holdFrames: 6,
-  detect(hands, debug, face) {
-    if (!face || (face.blend.cheekPuff ?? 0) < 0.5) return null;
-    return { x: face.nose.x, y: face.nose.y, size: face.size };
-  },
-};
-```
-
-The face model has no ear points, so `face.ears` is an estimate: the edge of the face at ear level, pushed slightly outward. The neutral eyebrow height is learned automatically during the first seconds. If eyebrow gestures fire on their own, make a neutral face and press `C`.
-
-Effects can read the current face and hands through `fx.face` / `fx.hands` — that's how the clown nose follows the head.
-
-**About gaze accuracy.** A regular webcam can't tell exactly where the eyes are looking. Gaze here is head rotation plus pupil offset, which is enough for screen zones (left / center / right, top / bottom), not for a specific button. Without calibration (`C`) the point may be offset. The coefficients are in `FACE_CONFIG` at the top of `src/face.js`.
-
-## Tuning a gesture that misfires
-
-1. Press `D` and show the gesture. The panel shows its numbers, e.g. `pinch=0.22` for "OK", `gap=2.40` for the palms.
-2. Compare them with the thresholds at the top of the gesture file (`PINCH`, `THUMB_OUT`, `MIN_GAP`, etc.) and adjust.
-3. Fires by accident → increase `holdFrames`. Effects jitter → decrease `SMOOTHING` in `main.js`.
-
-## Using it in Zoom / Meet / Telegram
-
-1. Install [OBS Studio](https://obsproject.com).
-2. Add a **Window Capture** source → the browser window with this page (press `H` to hide the panel).
-3. Click **Start Virtual Camera** in OBS.
-4. In Zoom/Meet, pick **OBS Virtual Camera** as the camera.
-
-## What's next
-
-- Complex gestures that are hard to express as rules → record landmark samples and train a classifier (MediaPipe Model Maker or a small neural net in TensorFlow.js).
-- Effects anchored to the face (glasses, masks) → use the 478 face points from `face.points`.
-- 3D effects → Three.js instead of Canvas 2D.
+- **Gaze** from a regular webcam is head rotation plus pupil offset — good for screen zones, not for a specific button. Calibrate with *Settings → Calibrate*.
+- **Ears** are not in the face model; their positions are estimated from the face outline.
+- Hand left/right comes from MediaPipe's handedness; verify it with *Show hand and face points* (L / R labels) and use *Swap* if needed.

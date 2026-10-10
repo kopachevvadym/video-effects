@@ -1,31 +1,12 @@
 <!doctype html>
-<html lang="uk">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Gesture Effects</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <video id="video" playsinline muted></video>
-  <canvas id="canvas"></canvas>
-
-  <div id="hud">
-    <div id="status">Запуск…</div>
-    <div id="face-info"></div>
-    <ul id="gesture-list"></ul>
-    <div id="controls">
-      <button id="btn-record" type="button">● Запис</button>
-      <label><input type="checkbox" id="chk-debug" /> Точки</label>
-      <label><input type="checkbox" id="chk-gaze" /> Погляд</label>
-    </div>
-    <div id="hint">
-      <kbd>H</kbd> сховати панель · <kbd>D</kbd> точки рук і обличчя · <kbd>G</kbd> приціл погляду ·
-      <kbd>C</kbd> калібрування (дивись у центр і натисни) · <kbd>1</kbd>…<kbd>U</kbd> ефект без жесту
-    </div>
-    <pre id="debug-info"></pre>
-  </div>
-
-  <script type="module" src="src/main.js"></script>
-</body>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gesture Flow</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/app/main.jsx"></script>
+  </body>
 </html>

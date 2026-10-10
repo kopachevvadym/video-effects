@@ -1,28 +1,23 @@
 #!/bin/bash
-# Подвійний клік у Finder запускає локальний сервер і відкриває браузер.
-# (Браузер не дає завантажувати модулі з file://, тому потрібен сервер.)
+# Double-click in Finder: installs dependencies on the first run and starts the editor.
 cd "$(dirname "$0")" || exit 1
-PORT=8001
-URL="http://localhost:$PORT"
 
-if command -v python3 >/dev/null 2>&1 && python3 -c "import http.server" >/dev/null 2>&1; then
-  echo "Відкриваю $URL  (щоб зупинити — Ctrl+C або закрий це вікно)"
-  (sleep 1; open "$URL") &
-  # сервер без кешування, щоб браузер завжди брав свіжі файли після змін
-  python3 -c "
-import http.server
-class H(http.server.SimpleHTTPRequestHandler):
-    def end_headers(self):
-        self.send_header('Cache-Control', 'no-store')
-        super().end_headers()
-http.server.ThreadingHTTPServer(('127.0.0.1', $PORT), H).serve_forever()
-"
-elif command -v npx >/dev/null 2>&1; then
-  echo "Відкриваю $URL  (щоб зупинити — Ctrl+C або закрий це вікно)"
-  (sleep 3; open "$URL") &
-  npx --yes http-server -p "$PORT" -c-1 .
-else
-  echo "Потрібен python3 або Node.js."
-  echo "Найпростіше: виконай у Терміналі  xcode-select --install  і запусти цей файл знову."
-  read -r -p "Натисни Enter, щоб закрити…"
+# Finder starts a non-login shell, so load nvm / Homebrew paths if they exist.
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+[ -x /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
+
+if ! command -v npm >/dev/null 2>&1; then
+  echo "Node.js is required: https://nodejs.org (or: brew install node)"
+  read -r -p "Press Enter to close…"
+  exit 1
 fi
+
+if [ ! -d node_modules ] || [ package.json -nt node_modules ]; then
+  echo "Installing dependencies (first run only)…"
+  npm install --no-audit --no-fund || { read -r -p "npm install failed. Press Enter to close…"; exit 1; }
+  touch node_modules
+fi
+
+echo "Gesture Flow → http://localhost:8001  (Ctrl+C or close this window to stop)"
+npm run dev

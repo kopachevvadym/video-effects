@@ -1,0 +1,26 @@
+{
+  "name": "gesture-effects",
+  "private": true,
+  "version": "0.2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 8001 --open",
+    "build": "vite build",
+    "preview": "vite preview --port 8001",
+    "mcp": "node mcp/server.js",
+    "mcp:install-desktop": "node mcp/install-claude-desktop.mjs",
+    "test": "node test/engine.test.mjs"
+  },
+  "dependencies": {
+    "@mediapipe/tasks-vision": "0.10.14",
+    "@modelcontextprotocol/sdk": "1.29.0",
+    "@xyflow/react": "12.3.6",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "ws": "8.18.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "4.3.4",
+    "vite": "5.4.11"
+  }
+}
