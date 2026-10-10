@@ -1,86 +1,88 @@
 # Gesture Effects
 
-Відеоефекти на жести рук у браузері: камера → MediaPipe знаходить 21 точку на кожній руці → твої правила розпізнають жест → ефект малюється поверх відео.
+Real-time video effects triggered by hand gestures and facial expressions, right in the browser: camera → MediaPipe finds 21 points on each hand and 478 points on the face → your rules recognize a gesture → an effect is drawn on top of the video.
 
-## Запуск
+No build step, no dependencies to install — plain ES modules + Canvas 2D. The UI is in Ukrainian.
 
-1. Подвійний клік на `start.command` (або в Терміналі: `python3 -m http.server 8001` у цій папці).
-2. Відкриється `http://localhost:8001`. Дозволь доступ до камери.
-3. Перший запуск качає модель (~8 МБ) з інтернету.
+## Running
 
-Якщо macOS не дає запустити `start.command`: правий клік → «Відкрити».
+1. Double-click `start.command` (or run `python3 -m http.server 8001` in this folder).
+2. `http://localhost:8001` opens. Allow camera access.
+3. The first run downloads the hand and face models (~12 MB) from the internet.
 
-Найкраще працює в Chrome. Safari теж підійде.
+If macOS refuses to run `start.command`: right-click → Open.
 
-## Жести, які вже є
+Works best in Chrome-based browsers. Safari works too.
 
-| Клавіша | Жест | Ефект |
+## Gestures
+
+| Key | Gesture | Effect |
 |---|---|---|
-| **Руки** | | |
-| 1 | 🤲 Дві розкриті долоні на відстані | Енергетична куля з блискавками до пальців; розводиш руки — росте; опускаєш — розлітається |
-| 5 | ✊→🖐 Стиснути кулак і різко розкрити | Вибух: спалах, ударна хвиля, іскри, струс кадру |
-| 6 | 👌 Знак «ОК» (решта пальців випрямлені) | Портал: кільця назовні, спіраль іскор усередину |
-| 7 | 🤙 «Шака» (великий + мізинець) | Зорепад по всьому екрану |
-| 0 | ☝️ Лише вказівний палець | Світловий слід за пальцем |
-| **Руки + обличчя** | | |
-| 2 | 🎯 Закрите одне око + вказівний палець | Лазер з відкритого ока крізь кінчик пальця (ліве закрите — червоний, праве — зелений) |
-| 3 | 👃 Торкнутись пальцем носа | Клоунський ніс на 3 секунди (рухається з головою) + «БІП!» |
-| 4 | 🤦 Долоня на лоб (фейспалм) | «Жаль»: аніме-сльози струмками з очей, синій меланхолійний відтінок, «жаль…». Ефект `dizzy` (зірочки навколо голови) теж є в `touchFx.js` — можна підставити в `config.js` |
-| **Очі** | | |
-| 8 / 9 | 😉 Підморгнути лівим / правим оком | Золота / бірюзова іскра в оці |
-| **Брови** | | |
-| Q | 😲 Підняти обидві брови | Аніме-лінії навколо голови + «!!» |
-| W / E | 🤨 Підняти ліву / праву брову | «?» над бровою |
-| R | 😠 Насупитись | Червона віньєтка, пара з голови, 💢 |
-| **Рот** | | |
-| T | 😮 Широко відкрити рот | Вогняне дихання — летить туди, куди повернута голова |
-| Y | 😁 Широко усміхнутись | Сонячні промені навколо голови |
-| U | 😗 Губи трубочкою | Мильні бульбашки з рота |
+| **Hands** | | |
+| 1 | 🤲 Two open palms apart | Energy ball with lightning to the fingertips; spread hands — it grows; drop them — it bursts |
+| 5 | ✊→🖐 Make a fist and snap it open | Explosion: flash, shockwave, embers, camera shake |
+| 6 | 👌 "OK" sign (other fingers straight) | Portal: rings expanding outward, sparks spiralling inward |
+| 7 | 🤙 Shaka (thumb + pinky) | Shooting stars across the whole screen |
+| 0 | ☝️ Index finger only | Light trail following the fingertip |
+| **Hands + face** | | |
+| 2 | 🎯 One eye closed + index finger | Laser from the open eye through the fingertip (left eye closed — red, right — green) |
+| 3 | 👃 Touch your nose | Clown nose for 3 seconds (follows the head) + "БІП!" |
+| 4 | 🤦 Palm on forehead (facepalm) | "Sorrow": anime tear streams, blue melancholic tint, "жаль…". A `dizzy` effect (stars circling the head) is also in `touchFx.js` — swap it in `config.js` |
+| **Eyes** | | |
+| 8 / 9 | 😉 Wink left / right eye | Gold / turquoise glint in the eye |
+| **Eyebrows** | | |
+| Q | 😲 Raise both eyebrows | Anime speed lines around the head + "!!" |
+| W / E | 🤨 Raise left / right eyebrow | "?" above that eyebrow |
+| R | 😠 Frown | Red vignette, steam from the head, 💢 |
+| **Mouth** | | |
+| T | 😮 Open mouth wide | Fire breath — goes where the head is turned |
+| Y | 😁 Big smile | Sun rays around the head |
+| U | 😗 Pucker lips | Soap bubbles from the mouth |
 
-Клавіші працюють у будь-якій розкладці (і в українській). Кожен одноразовий ефект спрацьовує один раз на жест: щоб повторити, відпусти жест і покажи знову.
+Keys work with any keyboard layout. One-shot effects fire once per gesture: release the gesture and show it again to repeat.
 
-Жести, які вже є у вбудованих «Реакціях» macOS (сердечко, 👍/👎, ✌️, «коза» двома руками), тут навмисно не використовуються. Якщо «Реакції» увімкнені (Пункт керування → Відеоефекти), macOS малює свої ефекти прямо у відео з камери, тож вони з'являтимуться і тут.
+Gestures that already exist in macOS built-in **Reactions** (heart, 👍/👎, ✌️, two-hand rock-on) are intentionally not used here. If Reactions are enabled (Control Center → Video Effects), macOS draws its own effects directly into the camera feed, so they will show up here too.
 
-Клавіші з таблиці запускають ефект у місці курсора без жесту — зручно, коли робиш новий ефект. Неперервні ефекти (1, 2, 0, T, U) треба тримати й водити мишкою.
+The keys in the table fire an effect at the cursor without a gesture — handy when building a new effect. Continuous effects (1, 2, 0, T, U) must be held while moving the mouse.
 
-- `D` — показати точки рук і обличчя та числа, з якими працюють жести (для налаштування порогів).
-- `G` — приціл там, куди ти дивишся.
-- `C` — калібрування: дивись у центр екрана з нейтральним обличчям і натисни (погляд + норма висоти брів).
-- `H` — сховати панель (наприклад, для запису екрана).
-- **● Запис** — записує відео з ефектами у файл (без панелі).
+- `D` — show hand and face points plus the numbers gestures use (for tuning thresholds).
+- `G` — crosshair where you are looking.
+- `C` — calibrate: look at the center of the screen with a neutral face and press (gaze + neutral eyebrow height).
+- `H` — hide the panel (e.g. for screen recording).
+- **● Запис** (Record) — records the video with effects to a file (without the panel).
 
-## Структура
+## Structure
 
 ```
 src/
-  config.js        ← який жест запускає який ефект (головний файл)
-  gestures/        ← жести: функція detect(hands) повертає позицію або null
-  effects/         ← ефекти: trigger(fx, hit) додає частинки на екран
-  engine.js        ← стабілізація: утримання N кадрів, пауза між запусками
-  geometry.js      ← індекси точок руки та допоміжні функції
-  face.js          ← очі, брови, рот, поворот голови, точка погляду
-  tracker.js       ← MediaPipe (руки + обличчя)
-  main.js          ← камера, цикл кадрів, малювання, запис
+  config.js        ← which gesture triggers which effect (main file)
+  gestures/        ← gestures: detect(hands, debug, face) returns a position or null
+  effects/         ← effects: trigger(fx, hit) adds particles to the screen
+  engine.js        ← stabilization: hold N frames, cooldown, exclusive gestures
+  geometry.js      ← hand point indices and helpers
+  face.js          ← eyes, eyebrows, mouth, head pose, gaze point
+  tracker.js       ← MediaPipe (hands + face)
+  main.js          ← camera, frame loop, drawing, recording
 ```
 
-## Як додати свій жест
+## Adding your own gesture
 
-**1. Жест** — `src/gestures/fist.js`:
+**1. Gesture** — `src/gestures/fist.js`:
 
 ```js
 import { INDEX, MIDDLE, RING, PINKY, isFolded } from "../geometry.js";
 
 export const fist = {
   name: "fist",
-  label: "✊ Кулак",
-  holdFrames: 8,      // скільки кадрів поспіль тримати жест (~30 кадрів = 1 с)
-  cooldownMs: 1500,   // пауза перед наступним спрацюванням
-  // mode: "continuous", // якщо ефект має йти, поки тримаєш жест (як слід пальця)
+  label: "✊ Fist",
+  holdFrames: 8,      // how many consecutive frames to hold the gesture (~30 frames = 1 s)
+  cooldownMs: 1500,   // minimum pause between triggers
+  // mode: "continuous", // if the effect should run while the gesture is held (like the finger trail)
 
   detect(hands, debug) {
     for (const h of hands) {
       if ([INDEX, MIDDLE, RING, PINKY].every((f) => isFolded(h, f))) {
-        const p = h.points[9]; // центр долоні
+        const p = h.points[9]; // palm center
         return { x: p.x, y: p.y, size: h.size };
       }
     }
@@ -89,16 +91,16 @@ export const fist = {
 };
 ```
 
-Що є в `hands[i]`:
-- `points` — 21 точка в пікселях екрана (вже дзеркально);
-- `size` — довжина долоні в пікселях (усі пороги задавай у частках `size`);
-- `gesture` / `gestureScore` — вбудований жест моделі: `Closed_Fist`, `Open_Palm`, `Pointing_Up`, `Thumb_Down`, `Thumb_Up`, `Victory`, `ILoveYou`.
+What `hands[i]` contains:
+- `points` — 21 points in screen pixels (already mirrored);
+- `size` — palm length in pixels (express all thresholds as fractions of `size`);
+- `gesture` / `gestureScore` — the model's built-in gesture: `Closed_Fist`, `Open_Palm`, `Pointing_Up`, `Thumb_Down`, `Thumb_Up`, `Victory`, `ILoveYou`.
 
-Карта точок — на початку `src/geometry.js`.
+The point map is at the top of `src/geometry.js`.
 
-**2. Ефект** — скопіюй `src/effects/portal.js` і зміни, що малюється. Кожна частинка — це об'єкт з `update(dt)` (повертає `false`, коли частинка має зникнути) і `draw(ctx)` (звичайний Canvas 2D).
+**2. Effect** — copy `src/effects/portal.js` and change what is drawn. Each particle is an object with `update(dt)` (returns `false` when the particle should disappear) and `draw(ctx)` (plain Canvas 2D).
 
-**3. Підключи** в `src/config.js`:
+**3. Wire it up** in `src/config.js`:
 
 ```js
 import { fist } from "./gestures/fist.js";
@@ -107,31 +109,31 @@ import { myEffect } from "./effects/myEffect.js";
 { gesture: fist, effect: myEffect },
 ```
 
-## Обличчя, очі й погляд
+## Face, eyes and gaze
 
-`src/face.js` перетворює 478 точок обличчя MediaPipe на зрозумілі величини. Кожен жест отримує їх третім параметром `face`:
+`src/face.js` turns MediaPipe's 478 face points into meaningful values. Every gesture receives them as the third `face` argument:
 
-| Поле | Що це |
+| Field | Meaning |
 |---|---|
-| `face.leftEye.closed`, `face.rightEye.closed` | око закрите (ліве = твоє ліве) |
-| `face.winking` | `"left"`, `"right"` або `null` (звичайне моргання не рахується) |
-| `face.leftEye.ear` | наскільки око відкрите (≈0.25–0.35 відкрите, <0.12 закрите) |
-| `face.yaw`, `face.pitch`, `face.roll` | поворот голови вліво/вправо, вгору/вниз, нахил (°) |
-| `face.gaze` | точка на екрані, куди ти дивишся (пікселі) |
-| `face.zone` | зона погляду: `ліво`, `центр`, `право`, `верх-ліво`, `низ-центр`… |
-| `face.brows.left.raise` | наскільки піднята брова відносно норми (0 — норма, 0.12+ — піднята, від'ємне — опущена) |
-| `face.brows.bothRaised`, `face.brows.raisedOne`, `face.brows.frown` | обидві підняті / одна (`"left"`/`"right"`) / насуплення |
-| `face.mouth.open` | відкритість рота (≈0 закритий, 0.1–0.3 розмова, 0.5+ широко) |
-| `face.mouth.isOpen`, `isSmiling`, `isPuckered` | широко відкритий / усмішка / трубочка |
-| `face.nose`, `face.ears.left`, `face.ears.right`, `face.top` | кінчик носа, приблизне положення вух (оцінка), верх лоба |
-| `face.blend` | 52 оцінки міміки MediaPipe: `mouthSmileLeft`, `jawOpen`, `browInnerUp`, `cheekPuff` тощо |
+| `face.leftEye.closed`, `face.rightEye.closed` | eye is closed (left = your left) |
+| `face.winking` | `"left"`, `"right"` or `null` (a normal blink doesn't count) |
+| `face.leftEye.ear` | how open the eye is (≈0.25–0.35 open, <0.12 closed) |
+| `face.yaw`, `face.pitch`, `face.roll` | head turn left/right, up/down, tilt (°) |
+| `face.gaze` | point on the screen you are looking at (pixels) |
+| `face.zone` | gaze zone: `ліво` (left), `центр` (center), `право` (right), `верх-ліво` (top-left), `низ-центр` (bottom-center)… |
+| `face.brows.left.raise` | how far the eyebrow is raised relative to neutral (0 — neutral, 0.12+ — raised, negative — lowered) |
+| `face.brows.bothRaised`, `face.brows.raisedOne`, `face.brows.frown` | both raised / one raised (`"left"`/`"right"`) / frowning |
+| `face.mouth.open` | mouth openness (≈0 closed, 0.1–0.3 talking, 0.5+ wide open) |
+| `face.mouth.isOpen`, `isSmiling`, `isPuckered` | wide open / smiling / puckered |
+| `face.nose`, `face.ears.left`, `face.ears.right`, `face.top` | nose tip, approximate ear positions (estimated), top of the forehead |
+| `face.blend` | MediaPipe's 52 expression scores: `mouthSmileLeft`, `jawOpen`, `browInnerUp`, `cheekPuff`, etc. |
 
-Приклад власного жесту «надути щоки»:
+Example of a custom "puff your cheeks" gesture:
 
 ```js
 export const cheekPuff = {
   name: "cheekPuff",
-  label: "🐡 Надути щоки",
+  label: "🐡 Puff cheeks",
   holdFrames: 6,
   detect(hands, debug, face) {
     if (!face || (face.blend.cheekPuff ?? 0) < 0.5) return null;
@@ -140,27 +142,27 @@ export const cheekPuff = {
 };
 ```
 
-Вух у моделі обличчя немає, тому `face.ears` — це оцінка: край обличчя на рівні вух, трохи відсунутий назовні. Норму висоти брів програма вивчає сама в перші секунди. Якщо брови спрацьовують самі по собі, зроби нейтральне обличчя й натисни `C`.
+The face model has no ear points, so `face.ears` is an estimate: the edge of the face at ear level, pushed slightly outward. The neutral eyebrow height is learned automatically during the first seconds. If eyebrow gestures fire on their own, make a neutral face and press `C`.
 
-Ефекти бачать поточне обличчя і руки через `fx.face` / `fx.hands`. Так клоунський ніс їде разом з головою.
+Effects can read the current face and hands through `fx.face` / `fx.hands` — that's how the clown nose follows the head.
 
-**Про точність погляду.** Звичайна вебкамера не бачить точно, куди дивляться очі. Погляд тут — це поворот голови плюс зміщення зіниць, і його вистачає на зони екрана (ліво / центр / право, верх / низ), а не на конкретну кнопку. Без калібрування (`C`) точка може бути зсунута. Коефіцієнти — у `FACE_CONFIG` на початку `src/face.js`.
+**About gaze accuracy.** A regular webcam can't tell exactly where the eyes are looking. Gaze here is head rotation plus pupil offset, which is enough for screen zones (left / center / right, top / bottom), not for a specific button. Without calibration (`C`) the point may be offset. The coefficients are in `FACE_CONFIG` at the top of `src/face.js`.
 
-## Налаштування, якщо жест спрацьовує погано
+## Tuning a gesture that misfires
 
-1. Натисни `D` і покажи жест. У панелі видно числа, наприклад для «ОК» `pinch=0.22`, для долонь `gap=2.40`.
-2. Порівняй їх з порогами на початку файлу жесту (`PINCH`, `THUMB_OUT`, `MIN_GAP` тощо) і підправ.
-3. Спрацьовує випадково → збільш `holdFrames`. Тремтять ефекти → зменш `SMOOTHING` у `main.js`.
+1. Press `D` and show the gesture. The panel shows its numbers, e.g. `pinch=0.22` for "OK", `gap=2.40` for the palms.
+2. Compare them with the thresholds at the top of the gesture file (`PINCH`, `THUMB_OUT`, `MIN_GAP`, etc.) and adjust.
+3. Fires by accident → increase `holdFrames`. Effects jitter → decrease `SMOOTHING` in `main.js`.
 
-## Як вивести в Zoom / Meet / Telegram
+## Using it in Zoom / Meet / Telegram
 
-1. Встанови [OBS Studio](https://obsproject.com).
-2. Додай джерело **Window Capture** → вікно браузера з цією сторінкою (натисни `H`, щоб сховати панель).
-3. **Start Virtual Camera** в OBS.
-4. У Zoom/Meet вибери камеру **OBS Virtual Camera**.
+1. Install [OBS Studio](https://obsproject.com).
+2. Add a **Window Capture** source → the browser window with this page (press `H` to hide the panel).
+3. Click **Start Virtual Camera** in OBS.
+4. In Zoom/Meet, pick **OBS Virtual Camera** as the camera.
 
-## Що далі
+## What's next
 
-- Складні жести, які важко описати правилами → записати приклади точок і навчити класифікатор (MediaPipe Model Maker або маленька нейромережа в TensorFlow.js).
-- Ефекти, прив'язані до обличчя (окуляри, маски) → MediaPipe Face Landmarker.
-- 3D-ефекти → Three.js замість Canvas 2D.
+- Complex gestures that are hard to express as rules → record landmark samples and train a classifier (MediaPipe Model Maker or a small neural net in TensorFlow.js).
+- Effects anchored to the face (glasses, masks) → use the 478 face points from `face.points`.
+- 3D effects → Three.js instead of Canvas 2D.
