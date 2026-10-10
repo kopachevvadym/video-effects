@@ -2,6 +2,8 @@
 import { GraphEngine } from "../src/graph/engine.js";
 import { createDefaultGraph } from "../src/graph/defaultGraph.js";
 import { PropSystem } from "../src/runtime/props.js";
+import { resolveCamera } from "../src/graph/effects.js";
+import { buildRules, availability } from "../src/graph/rules.js";
 
 globalThis.innerWidth = 1280; globalThis.innerHeight = 720;
 const assert = (c, m) => { if (!c) { console.error("FAIL:", m); process.exitCode = 1; } else console.log("ok  ", m); };
@@ -160,5 +162,56 @@ assert(!e2.cur.get("s").on, "B alone (no A before) does not trigger the sequence
   run([], 30);
   assert(run([hand("right", 640 + 30, 600 + 170, pointF)]) === 0, "pointing away from the head does not fire");
   assert(L4.get("cam-face").pending.length > 0 && e4.effectCams.get("fx-temple").has("cam-all"), "mind waves go to the face and merged cameras");
+}
+
+// ---------- show 1–5 fingers → switch camera ----------
+{
+  const e5 = new GraphEngine();
+  e5.load(createDefaultGraph());
+  const L5 = new Map(e5.cameras.map((c) => [c, new Layer()]));
+  const actions = [];
+  e5.onAction = (a) => actions.push(a);
+  const run = (hands, n) => { for (let i = 0; i < n; i++) { t += 33; e5.step({ hands, face: null, now: t, dt: 0.033, W: 1280, H: 720, keys: new Set(), props }, L5); } };
+  const fingers = (n) => {
+    const f = { index: n >= 1, middle: n >= 2, ring: n >= 3, pinky: n >= 4, thumb: n >= 5 ? [-105, -75] : [-10, -60] };
+    return hand("left", 400, 500, f);
+  };
+  run([], 10);
+  run([fingers(2)], 10);
+  assert(actions.length === 0, "2 fingers for 0.3 s: not yet (must be held still ~0.6 s)");
+  run([fingers(2)], 15);
+  assert(actions.length === 1 && actions[0].hit.count === 2 && actions[0].params.target === "fingers", "2 fingers held still → one switch action with count 2");
+  run([fingers(2)], 30);
+  assert(actions.length === 1, "keeping the fingers up does not switch again");
+  run([fingers(3)], 30);
+  assert(actions.length === 2 && actions[1].hit.count === 3, "changing to 3 fingers switches again");
+  for (const n of [1, 4, 5]) { run([], 10); run([fingers(n)], 30); }
+  assert(actions.slice(2).map((a) => a.hit.count).join() === "1,4,5", "1, 4 and 5 fingers are counted right");
+  run([], 10);
+  const before = actions.length;
+  for (let i = 0; i < 40; i++) run([hand("left", 300 + i * 12, 500, { index: true, middle: true, ring: false, pinky: false, thumb: [-10, -60] })], 1);
+  assert(actions.length === before, "a moving hand never switches");
+  run([], 10);
+  run([{ ...fingers(2), points: fingers(2).points.map((q) => ({ x: q.x, y: 1000 - q.y })) }], 40);
+  assert(actions.length === before, "fingers pointing down do not count (upright only)");
+  e5.vars.set("drawing", true);
+  run([], 10); run([fingers(3)], 40);
+  assert(actions.length === before, "no switching while drawing is on");
+  e5.vars.set("drawing", false);
+  const cams = [{ id: "a", hotkey: "1" }, { id: "b", hotkey: "2" }, { id: "c", hotkey: "3" }, { id: "d", hotkey: "" }];
+  assert(resolveCamera(cams, "a", "fingers", 2) === "b" && resolveCamera(cams, "a", "fingers", 5) === null, "count → camera with that Alt+N; none for a missing one");
+  assert(resolveCamera(cams, "c", "next") === "a" && resolveCamera(cams, "a", "prev") === "c" && resolveCamera(cams, "a", "3") === "c", "next / prev wrap around, fixed hotkey works");
+}
+
+// ---------- Rules view model ----------
+{
+  const { rules, switches } = buildRules(createDefaultGraph());
+  const on = new Map(switches.map((s) => [s.id, s.on]));
+  const r = (id) => rules.find((x) => x.id === id);
+  assert(r("fx-laser").group === "combo" && r("fx-laser").triggers[0].kind === "and", "laser = wink AND pointing, grouped as a combination");
+  assert(r("fx-ball").cameras.includes("cam-hands") && r("fx-ball").cameras.includes("cam-all"), "rule lists the cameras incl. merged ones");
+  assert(availability(r("fx-trail"), on, { drawing: false }).status === "waiting" && availability(r("fx-trail"), on, { drawing: true }).status === "ready", "light trail waits for the 'drawing' state");
+  assert(availability(r("fx-swipe-up"), new Map([...on, ["sw-motion", false]]), {}).status === "off", "Motions switch off → swipe rules are off");
+  assert(rules.some((x) => x.type === "state" && x.params.name === "drawing" && x.port === "toggle"), "two fists → toggles 'drawing' is listed as a state rule");
 }
 console.log(process.exitCode ? "SOME TESTS FAILED" : "ALL PASSED");

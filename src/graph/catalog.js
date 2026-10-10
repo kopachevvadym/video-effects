@@ -54,6 +54,7 @@ export function inputsOf(def) {
 /** Outputs (source handles) for a definition. */
 export function outputsOf(def) {
   const t = nodeTypeOf(def);
+  if (t === "effect" && def.action) return [{ id: "fired", label: { uk: "спрацював", en: "fired" }, kind: "signal" }];
   if (t === "effect")
     return [
       { id: "video", label: { uk: "у камеру", en: "to camera" }, kind: "video" },

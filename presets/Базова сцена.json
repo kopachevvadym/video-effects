@@ -1,0 +1,1741 @@
+{
+  "version": 1,
+  "migrations": [
+    "motions-1",
+    "temple-1",
+    "scenes-1"
+  ],
+  "nodes": [
+    {
+      "id": "cam-hands",
+      "position": {
+        "x": 950,
+        "y": 300
+      },
+      "data": {
+        "kind": "camera",
+        "params": {
+          "name": "Hands",
+          "hotkey": "1",
+          "resolution": "1920x1080"
+        }
+      },
+      "style": {
+        "width": 320
+      }
+    },
+    {
+      "id": "cam-face",
+      "position": {
+        "x": 950,
+        "y": 2400
+      },
+      "data": {
+        "kind": "camera",
+        "params": {
+          "name": "Face",
+          "hotkey": "2"
+        }
+      },
+      "style": {
+        "width": 320
+      }
+    },
+    {
+      "id": "cam-all",
+      "position": {
+        "x": 1400,
+        "y": 1350
+      },
+      "data": {
+        "kind": "camera",
+        "params": {
+          "name": "All together",
+          "hotkey": "3",
+          "resolution": "1920x1080",
+          "background": "camera"
+        }
+      },
+      "style": {
+        "width": 320
+      }
+    },
+    {
+      "id": "g-palms",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "data": {
+        "kind": "twoPalms",
+        "params": {}
+      }
+    },
+    {
+      "id": "fx-ball",
+      "position": {
+        "x": 600,
+        "y": 0
+      },
+      "data": {
+        "kind": "energyBall",
+        "params": {}
+      }
+    },
+    {
+      "id": "g-aim-wink",
+      "position": {
+        "x": 0,
+        "y": 150
+      },
+      "data": {
+        "kind": "wink",
+        "params": {
+          "eye": "any"
+        }
+      }
+    },
+    {
+      "id": "g-aim-point",
+      "position": {
+        "x": 0,
+        "y": 300
+      },
+      "data": {
+        "kind": "pointing",
+        "params": {
+          "hand": "any"
+        }
+      }
+    },
+    {
+      "id": "l-aim",
+      "position": {
+        "x": 300,
+        "y": 150
+      },
+      "data": {
+        "kind": "and",
+        "params": {
+          "anchor": "b"
+        }
+      }
+    },
+    {
+      "id": "fx-laser",
+      "position": {
+        "x": 600,
+        "y": 150
+      },
+      "data": {
+        "kind": "laser",
+        "params": {}
+      }
+    },
+    {
+      "id": "g-burst",
+      "position": {
+        "x": 0,
+        "y": 450
+      },
+      "data": {
+        "kind": "fistToOpen",
+        "params": {}
+      }
+    },
+    {
+      "id": "fx-boom",
+      "position": {
+        "x": 600,
+        "y": 450
+      },
+      "data": {
+        "kind": "explosion",
+        "params": {}
+      }
+    },
+    {
+      "id": "g-ok",
+      "position": {
+        "x": 0,
+        "y": 600
+      },
+      "data": {
+        "kind": "okSign",
+        "params": {}
+      }
+    },
+    {
+      "id": "fx-portal",
+      "position": {
+        "x": 600,
+        "y": 600
+      },
+      "data": {
+        "kind": "portal",
+        "params": {}
+      }
+    },
+    {
+      "id": "g-shaka",
+      "position": {
+        "x": 0,
+        "y": 750
+      },
+      "data": {
+        "kind": "shaka",
+        "params": {}
+      }
+    },
+    {
+      "id": "fx-stars",
+      "position": {
+        "x": 600,
+        "y": 750
+      },
+      "data": {
+        "kind": "starfall",
+        "params": {}
+      }
+    },
+    {
+      "id": "g-fists",
+      "position": {
+        "x": -166.74120099490605,
+        "y": 902.7636663148327
+      },
+      "data": {
+        "kind": "fist",
+        "params": {
+          "hand": "both"
+        }
+      }
+    },
+    {
+      "id": "s-draw-set",
+      "position": {
+        "x": 55.87614218977846,
+        "y": 935.9276620928251
+      },
+      "data": {
+        "kind": "setVar",
+        "params": {
+          "name": "drawing"
+        }
+      }
+    },
+    {
+      "id": "s-draw-get",
+      "position": {
+        "x": -274.90922241768317,
+        "y": 1138.4475726796434
+      },
+      "data": {
+        "kind": "getVar",
+        "params": {
+          "name": "drawing"
+        }
+      }
+    },
+    {
+      "id": "g-draw",
+      "position": {
+        "x": 0,
+        "y": 1200
+      },
+      "data": {
+        "kind": "pointing",
+        "params": {
+          "hand": "any"
+        }
+      }
+    },
+    {
+      "id": "fx-trail",
+      "position": {
+        "x": 600,
+        "y": 1200
+      },
+      "data": {
+        "kind": "magicTrail",
+        "params": {}
+      }
+    },
+    {
+      "id": "sw-hat",
+      "position": {
+        "x": -262.35579279390504,
+        "y": 1348.7042493253593
+      },
+      "data": {
+        "kind": "switch",
+        "params": {
+          "label": "Hat",
+          "on": true
+        }
+      }
+    },
+    {
+      "id": "g-hat",
+      "position": {
+        "x": 0,
+        "y": 1350
+      },
+      "data": {
+        "kind": "modelGesture",
+        "params": {
+          "gesture": "ILoveYou",
+          "hand": "any"
+        }
+      }
+    },
+    {
+      "id": "fx-hat",
+      "position": {
+        "x": 600,
+        "y": 1350
+      },
+      "data": {
+        "kind": "spawnProp",
+        "params": {
+          "type": "topHat",
+          "place": "hand",
+          "release": "fall"
+        }
+      }
+    },
+    {
+      "id": "g-worn",
+      "position": {
+        "x": 0,
+        "y": 1500
+      },
+      "data": {
+        "kind": "propOnHead",
+        "params": {
+          "type": "any"
+        }
+      }
+    },
+    {
+      "id": "fx-worn",
+      "position": {
+        "x": 600,
+        "y": 1500
+      },
+      "data": {
+        "kind": "eyeGlint",
+        "params": {
+          "anchor": "forehead",
+          "scale": 1.6,
+          "hue": 45
+        }
+      }
+    },
+    {
+      "id": "g-clear",
+      "position": {
+        "x": 0,
+        "y": 1650
+      },
+      "data": {
+        "kind": "eyesClosed",
+        "params": {
+          "hold": 30
+        }
+      }
+    },
+    {
+      "id": "fx-clear",
+      "position": {
+        "x": 600,
+        "y": 1650
+      },
+      "data": {
+        "kind": "clearProps",
+        "params": {
+          "type": "all"
+        }
+      }
+    },
+    {
+      "id": "g-nose",
+      "position": {
+        "x": 0,
+        "y": 1947.785046728972
+      },
+      "data": {
+        "kind": "touchFace",
+        "params": {
+          "target": "nose"
+        }
+      }
+    },
+    {
+      "id": "fx-nose",
+      "position": {
+        "x": 600,
+        "y": 1950
+      },
+      "data": {
+        "kind": "noseHonk",
+        "params": {}
+      }
+    },
+    {
+      "id": "g-facepalm",
+      "position": {
+        "x": 0,
+        "y": 2100
+      },
+      "data": {
+        "kind": "facepalm",
+        "params": {}
+      }
+    },
+    {
+      "id": "fx-sorrow",
+      "position": {
+        "x": 600,
+        "y": 2100
+      },
+      "data": {
+        "kind": "sorrow",
+        "params": {}
+      }
+    },
+    {
+      "id": "g-wink-l",
+      "position": {
+        "x": 0,
+        "y": 2250
+      },
+      "data": {
+        "kind": "wink",
+        "params": {
+          "eye": "left"
+        }
+      }
+    },
+    {
+      "id": "fx-wink-l",
+      "position": {
+        "x": 600,
+        "y": 2250
+      },
+      "data": {
+        "kind": "eyeGlint",
+        "params": {}
+      }
+    },
+    {
+      "id": "g-wink-r",
+      "position": {
+        "x": 0,
+        "y": 2400
+      },
+      "data": {
+        "kind": "wink",
+        "params": {
+          "eye": "right"
+        }
+      }
+    },
+    {
+      "id": "fx-wink-r",
+      "position": {
+        "x": 600,
+        "y": 2400
+      },
+      "data": {
+        "kind": "eyeGlint",
+        "params": {}
+      }
+    },
+    {
+      "id": "g-brow-both",
+      "position": {
+        "x": 0,
+        "y": 2550
+      },
+      "data": {
+        "kind": "brows",
+        "params": {
+          "mode": "both"
+        }
+      }
+    },
+    {
+      "id": "fx-brow-both",
+      "position": {
+        "x": 600,
+        "y": 2550
+      },
+      "data": {
+        "kind": "surprise",
+        "params": {}
+      }
+    },
+    {
+      "id": "g-brow-left",
+      "position": {
+        "x": 0,
+        "y": 2700
+      },
+      "data": {
+        "kind": "brows",
+        "params": {
+          "mode": "left"
+        }
+      }
+    },
+    {
+      "id": "fx-brow-left",
+      "position": {
+        "x": 600,
+        "y": 2700
+      },
+      "data": {
+        "kind": "question",
+        "params": {}
+      }
+    },
+    {
+      "id": "g-brow-right",
+      "position": {
+        "x": 0,
+        "y": 2850
+      },
+      "data": {
+        "kind": "brows",
+        "params": {
+          "mode": "right"
+        }
+      }
+    },
+    {
+      "id": "fx-brow-right",
+      "position": {
+        "x": 600,
+        "y": 2850
+      },
+      "data": {
+        "kind": "question",
+        "params": {}
+      }
+    },
+    {
+      "id": "g-brow-frown",
+      "position": {
+        "x": 0,
+        "y": 3000
+      },
+      "data": {
+        "kind": "brows",
+        "params": {
+          "mode": "frown"
+        }
+      }
+    },
+    {
+      "id": "fx-brow-frown",
+      "position": {
+        "x": 600,
+        "y": 3000
+      },
+      "data": {
+        "kind": "anger",
+        "params": {}
+      }
+    },
+    {
+      "id": "sw-mouth",
+      "position": {
+        "x": -369.5162742470932,
+        "y": 3046.455375433053
+      },
+      "data": {
+        "kind": "switch",
+        "params": {
+          "label": "Mouth",
+          "on": true,
+          "key": "KeyM"
+        }
+      }
+    },
+    {
+      "id": "g-mouth-open",
+      "position": {
+        "x": 0,
+        "y": 3150
+      },
+      "data": {
+        "kind": "mouth",
+        "params": {
+          "mode": "open"
+        }
+      }
+    },
+    {
+      "id": "fx-mouth-open",
+      "position": {
+        "x": 600,
+        "y": 3150
+      },
+      "data": {
+        "kind": "fireBreath",
+        "params": {}
+      }
+    },
+    {
+      "id": "g-mouth-smile",
+      "position": {
+        "x": 0,
+        "y": 3300
+      },
+      "data": {
+        "kind": "mouth",
+        "params": {
+          "mode": "smile"
+        }
+      }
+    },
+    {
+      "id": "fx-mouth-smile",
+      "position": {
+        "x": 600,
+        "y": 3300
+      },
+      "data": {
+        "kind": "sunshine",
+        "params": {}
+      }
+    },
+    {
+      "id": "g-mouth-pucker",
+      "position": {
+        "x": 0,
+        "y": 3450
+      },
+      "data": {
+        "kind": "mouth",
+        "params": {
+          "mode": "pucker"
+        }
+      }
+    },
+    {
+      "id": "fx-mouth-pucker",
+      "position": {
+        "x": 600,
+        "y": 3450
+      },
+      "data": {
+        "kind": "bubbles",
+        "params": {}
+      }
+    },
+    {
+      "id": "sw-motion",
+      "position": {
+        "x": 300,
+        "y": 3950
+      },
+      "data": {
+        "kind": "switch",
+        "params": {
+          "label": "Motions",
+          "on": true,
+          "key": "KeyN"
+        }
+      }
+    },
+    {
+      "id": "m-swipe-up",
+      "position": {
+        "x": 0,
+        "y": 3650
+      },
+      "data": {
+        "kind": "swipe",
+        "params": {
+          "dir": "up"
+        }
+      }
+    },
+    {
+      "id": "fx-swipe-up",
+      "position": {
+        "x": 600,
+        "y": 3650
+      },
+      "data": {
+        "kind": "swoosh",
+        "params": {
+          "hue": 45,
+          "cooldownMs": 300
+        }
+      }
+    },
+    {
+      "id": "m-swipe-down",
+      "position": {
+        "x": 0,
+        "y": 3800
+      },
+      "data": {
+        "kind": "swipe",
+        "params": {
+          "dir": "down"
+        }
+      }
+    },
+    {
+      "id": "fx-swipe-down",
+      "position": {
+        "x": 600,
+        "y": 3800
+      },
+      "data": {
+        "kind": "swoosh",
+        "params": {
+          "hue": 205,
+          "cooldownMs": 300
+        }
+      }
+    },
+    {
+      "id": "m-swipe-left",
+      "position": {
+        "x": 0,
+        "y": 3950
+      },
+      "data": {
+        "kind": "swipe",
+        "params": {
+          "dir": "left"
+        }
+      }
+    },
+    {
+      "id": "fx-swipe-left",
+      "position": {
+        "x": 600,
+        "y": 3950
+      },
+      "data": {
+        "kind": "swoosh",
+        "params": {
+          "hue": 320,
+          "cooldownMs": 300
+        }
+      }
+    },
+    {
+      "id": "m-swipe-right",
+      "position": {
+        "x": 0,
+        "y": 4100
+      },
+      "data": {
+        "kind": "swipe",
+        "params": {
+          "dir": "right"
+        }
+      }
+    },
+    {
+      "id": "fx-swipe-right",
+      "position": {
+        "x": 600,
+        "y": 4100
+      },
+      "data": {
+        "kind": "swoosh",
+        "params": {
+          "hue": 140,
+          "cooldownMs": 300
+        }
+      }
+    },
+    {
+      "id": "m-wave",
+      "position": {
+        "x": 0,
+        "y": 4250
+      },
+      "data": {
+        "kind": "wave",
+        "params": {}
+      }
+    },
+    {
+      "id": "fx-wave",
+      "position": {
+        "x": 600,
+        "y": 4250
+      },
+      "data": {
+        "kind": "textPop",
+        "params": {
+          "text": "👋 Hi!",
+          "hue": 50
+        }
+      }
+    },
+    {
+      "id": "m-circle",
+      "position": {
+        "x": 0,
+        "y": 4400
+      },
+      "data": {
+        "kind": "circle",
+        "params": {}
+      }
+    },
+    {
+      "id": "fx-circle",
+      "position": {
+        "x": 600,
+        "y": 4400
+      },
+      "data": {
+        "kind": "portal",
+        "params": {
+          "hue": 280
+        }
+      }
+    },
+    {
+      "id": "m-push",
+      "position": {
+        "x": 0,
+        "y": 4550
+      },
+      "data": {
+        "kind": "push",
+        "params": {
+          "dir": "push"
+        }
+      }
+    },
+    {
+      "id": "fx-push",
+      "position": {
+        "x": 600,
+        "y": 4550
+      },
+      "data": {
+        "kind": "explosion",
+        "params": {
+          "scale": 0.7
+        }
+      }
+    },
+    {
+      "id": "m-nod",
+      "position": {
+        "x": 0,
+        "y": 4700
+      },
+      "data": {
+        "kind": "headGesture",
+        "params": {
+          "type": "nod"
+        }
+      }
+    },
+    {
+      "id": "fx-nod",
+      "position": {
+        "x": 600,
+        "y": 4700
+      },
+      "data": {
+        "kind": "textPop",
+        "params": {
+          "text": "✓ Yes",
+          "hue": 130,
+          "anchor": "forehead"
+        }
+      }
+    },
+    {
+      "id": "m-shake",
+      "position": {
+        "x": 0,
+        "y": 4850
+      },
+      "data": {
+        "kind": "headGesture",
+        "params": {
+          "type": "shake"
+        }
+      }
+    },
+    {
+      "id": "fx-shake",
+      "position": {
+        "x": 600,
+        "y": 4850
+      },
+      "data": {
+        "kind": "textPop",
+        "params": {
+          "text": "✗ No",
+          "hue": 0,
+          "anchor": "forehead"
+        }
+      }
+    },
+    {
+      "id": "g-temple",
+      "position": {
+        "x": 0,
+        "y": 5050
+      },
+      "data": {
+        "kind": "fingerToTemple",
+        "params": {}
+      }
+    },
+    {
+      "id": "fx-temple",
+      "position": {
+        "x": 600,
+        "y": 5050
+      },
+      "data": {
+        "kind": "mindWaves",
+        "params": {}
+      }
+    },
+    {
+      "id": "sw-scenes",
+      "position": {
+        "x": 300,
+        "y": 5250
+      },
+      "data": {
+        "kind": "switch",
+        "params": {
+          "label": "Scenes",
+          "on": true,
+          "key": "KeyS"
+        }
+      }
+    },
+    {
+      "id": "g-fingers",
+      "position": {
+        "x": 0,
+        "y": 5250
+      },
+      "data": {
+        "kind": "fingerCount",
+        "params": {
+          "count": "any"
+        }
+      }
+    },
+    {
+      "id": "act-scene",
+      "position": {
+        "x": 600,
+        "y": 5250
+      },
+      "data": {
+        "kind": "switchCamera",
+        "params": {
+          "target": "fingers"
+        }
+      }
+    },
+    {
+      "id": "setVar-22yj",
+      "position": {
+        "x": -230.2429906542056,
+        "y": 1952.3130841121495
+      },
+      "data": {
+        "kind": "setVar",
+        "params": {}
+      }
+    },
+    {
+      "id": "getVar-22yk",
+      "position": {
+        "x": -473.36915887850466,
+        "y": 1966.5
+      },
+      "data": {
+        "kind": "getVar",
+        "params": {}
+      }
+    },
+    {
+      "id": "setVar-22yl",
+      "position": {
+        "x": 220.95157496153547,
+        "y": 1727.3773381240146
+      },
+      "data": {
+        "kind": "setVar",
+        "params": {}
+      }
+    },
+    {
+      "id": "touchFace-22ym",
+      "position": {
+        "x": -232.92274450736863,
+        "y": 1732.8829622773194
+      },
+      "data": {
+        "kind": "touchFace",
+        "params": {}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-cam-hands-video-cam-all-video",
+      "source": "cam-hands",
+      "target": "cam-all",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-cam-face-video-cam-all-video",
+      "source": "cam-face",
+      "target": "cam-all",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-g-palms-out-fx-ball-trigger",
+      "source": "g-palms",
+      "target": "fx-ball",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-fx-ball-video-cam-hands-video",
+      "source": "fx-ball",
+      "target": "cam-hands",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-g-aim-wink-out-l-aim-a",
+      "source": "g-aim-wink",
+      "target": "l-aim",
+      "sourceHandle": "out",
+      "targetHandle": "a"
+    },
+    {
+      "id": "e-g-aim-point-out-l-aim-b",
+      "source": "g-aim-point",
+      "target": "l-aim",
+      "sourceHandle": "out",
+      "targetHandle": "b"
+    },
+    {
+      "id": "e-l-aim-out-fx-laser-trigger",
+      "source": "l-aim",
+      "target": "fx-laser",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-fx-laser-video-cam-hands-video",
+      "source": "fx-laser",
+      "target": "cam-hands",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-g-burst-out-fx-boom-trigger",
+      "source": "g-burst",
+      "target": "fx-boom",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-fx-boom-video-cam-hands-video",
+      "source": "fx-boom",
+      "target": "cam-hands",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-g-ok-out-fx-portal-trigger",
+      "source": "g-ok",
+      "target": "fx-portal",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-fx-portal-video-cam-hands-video",
+      "source": "fx-portal",
+      "target": "cam-hands",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-g-shaka-out-fx-stars-trigger",
+      "source": "g-shaka",
+      "target": "fx-stars",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-fx-stars-video-cam-hands-video",
+      "source": "fx-stars",
+      "target": "cam-hands",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-g-fists-out-s-draw-set-toggle",
+      "source": "g-fists",
+      "target": "s-draw-set",
+      "sourceHandle": "out",
+      "targetHandle": "toggle"
+    },
+    {
+      "id": "e-s-draw-get-out-g-draw-enable",
+      "source": "s-draw-get",
+      "target": "g-draw",
+      "sourceHandle": "out",
+      "targetHandle": "enable"
+    },
+    {
+      "id": "e-g-draw-out-fx-trail-trigger",
+      "source": "g-draw",
+      "target": "fx-trail",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-fx-trail-video-cam-hands-video",
+      "source": "fx-trail",
+      "target": "cam-hands",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-l-aim-out-g-draw-block",
+      "source": "l-aim",
+      "target": "g-draw",
+      "sourceHandle": "out",
+      "targetHandle": "block"
+    },
+    {
+      "id": "e-sw-hat-out-g-hat-enable",
+      "source": "sw-hat",
+      "target": "g-hat",
+      "sourceHandle": "out",
+      "targetHandle": "enable"
+    },
+    {
+      "id": "e-g-hat-out-fx-hat-trigger",
+      "source": "g-hat",
+      "target": "fx-hat",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-fx-hat-video-cam-hands-video",
+      "source": "fx-hat",
+      "target": "cam-hands",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-g-worn-out-fx-worn-trigger",
+      "source": "g-worn",
+      "target": "fx-worn",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-fx-worn-video-cam-hands-video",
+      "source": "fx-worn",
+      "target": "cam-hands",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-g-clear-out-fx-clear-trigger",
+      "source": "g-clear",
+      "target": "fx-clear",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-fx-clear-video-cam-hands-video",
+      "source": "fx-clear",
+      "target": "cam-hands",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-g-nose-out-fx-nose-trigger",
+      "source": "g-nose",
+      "target": "fx-nose",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-fx-nose-video-cam-face-video",
+      "source": "fx-nose",
+      "target": "cam-face",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-g-nose-out-g-draw-block",
+      "source": "g-nose",
+      "target": "g-draw",
+      "sourceHandle": "out",
+      "targetHandle": "block"
+    },
+    {
+      "id": "e-g-facepalm-out-fx-sorrow-trigger",
+      "source": "g-facepalm",
+      "target": "fx-sorrow",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-fx-sorrow-video-cam-face-video",
+      "source": "fx-sorrow",
+      "target": "cam-face",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-g-wink-l-out-fx-wink-l-trigger",
+      "source": "g-wink-l",
+      "target": "fx-wink-l",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-fx-wink-l-video-cam-face-video",
+      "source": "fx-wink-l",
+      "target": "cam-face",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-l-aim-out-g-wink-l-block",
+      "source": "l-aim",
+      "target": "g-wink-l",
+      "sourceHandle": "out",
+      "targetHandle": "block"
+    },
+    {
+      "id": "e-g-wink-r-out-fx-wink-r-trigger",
+      "source": "g-wink-r",
+      "target": "fx-wink-r",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-fx-wink-r-video-cam-face-video",
+      "source": "fx-wink-r",
+      "target": "cam-face",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-l-aim-out-g-wink-r-block",
+      "source": "l-aim",
+      "target": "g-wink-r",
+      "sourceHandle": "out",
+      "targetHandle": "block"
+    },
+    {
+      "id": "e-g-brow-both-out-fx-brow-both-trigger",
+      "source": "g-brow-both",
+      "target": "fx-brow-both",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-fx-brow-both-video-cam-face-video",
+      "source": "fx-brow-both",
+      "target": "cam-face",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-g-facepalm-out-g-brow-both-block",
+      "source": "g-facepalm",
+      "target": "g-brow-both",
+      "sourceHandle": "out",
+      "targetHandle": "block"
+    },
+    {
+      "id": "e-g-brow-left-out-fx-brow-left-trigger",
+      "source": "g-brow-left",
+      "target": "fx-brow-left",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-fx-brow-left-video-cam-face-video",
+      "source": "fx-brow-left",
+      "target": "cam-face",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-g-facepalm-out-g-brow-left-block",
+      "source": "g-facepalm",
+      "target": "g-brow-left",
+      "sourceHandle": "out",
+      "targetHandle": "block"
+    },
+    {
+      "id": "e-g-brow-right-out-fx-brow-right-trigger",
+      "source": "g-brow-right",
+      "target": "fx-brow-right",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-fx-brow-right-video-cam-face-video",
+      "source": "fx-brow-right",
+      "target": "cam-face",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-g-facepalm-out-g-brow-right-block",
+      "source": "g-facepalm",
+      "target": "g-brow-right",
+      "sourceHandle": "out",
+      "targetHandle": "block"
+    },
+    {
+      "id": "e-g-brow-frown-out-fx-brow-frown-trigger",
+      "source": "g-brow-frown",
+      "target": "fx-brow-frown",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-fx-brow-frown-video-cam-face-video",
+      "source": "fx-brow-frown",
+      "target": "cam-face",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-g-facepalm-out-g-brow-frown-block",
+      "source": "g-facepalm",
+      "target": "g-brow-frown",
+      "sourceHandle": "out",
+      "targetHandle": "block"
+    },
+    {
+      "id": "e-g-mouth-open-out-fx-mouth-open-trigger",
+      "source": "g-mouth-open",
+      "target": "fx-mouth-open",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-sw-mouth-out-g-mouth-open-enable",
+      "source": "sw-mouth",
+      "target": "g-mouth-open",
+      "sourceHandle": "out",
+      "targetHandle": "enable"
+    },
+    {
+      "id": "e-fx-mouth-open-video-cam-face-video",
+      "source": "fx-mouth-open",
+      "target": "cam-face",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-g-mouth-smile-out-fx-mouth-smile-trigger",
+      "source": "g-mouth-smile",
+      "target": "fx-mouth-smile",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-sw-mouth-out-g-mouth-smile-enable",
+      "source": "sw-mouth",
+      "target": "g-mouth-smile",
+      "sourceHandle": "out",
+      "targetHandle": "enable"
+    },
+    {
+      "id": "e-fx-mouth-smile-video-cam-face-video",
+      "source": "fx-mouth-smile",
+      "target": "cam-face",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-g-mouth-pucker-out-fx-mouth-pucker-trigger",
+      "source": "g-mouth-pucker",
+      "target": "fx-mouth-pucker",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-sw-mouth-out-g-mouth-pucker-enable",
+      "source": "sw-mouth",
+      "target": "g-mouth-pucker",
+      "sourceHandle": "out",
+      "targetHandle": "enable"
+    },
+    {
+      "id": "e-fx-mouth-pucker-video-cam-face-video",
+      "source": "fx-mouth-pucker",
+      "target": "cam-face",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "xy-edge__s-draw-setout-g-drawenable",
+      "source": "s-draw-set",
+      "target": "g-draw",
+      "sourceHandle": "out",
+      "targetHandle": "enable"
+    },
+    {
+      "id": "e-m-swipe-up-out-fx-swipe-up-trigger",
+      "source": "m-swipe-up",
+      "target": "fx-swipe-up",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-sw-motion-out-m-swipe-up-enable",
+      "source": "sw-motion",
+      "target": "m-swipe-up",
+      "sourceHandle": "out",
+      "targetHandle": "enable"
+    },
+    {
+      "id": "e-s-draw-get-out-m-swipe-up-block",
+      "source": "s-draw-get",
+      "target": "m-swipe-up",
+      "sourceHandle": "out",
+      "targetHandle": "block"
+    },
+    {
+      "id": "e-fx-swipe-up-video-cam-hands-video",
+      "source": "fx-swipe-up",
+      "target": "cam-hands",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-m-swipe-down-out-fx-swipe-down-trigger",
+      "source": "m-swipe-down",
+      "target": "fx-swipe-down",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-sw-motion-out-m-swipe-down-enable",
+      "source": "sw-motion",
+      "target": "m-swipe-down",
+      "sourceHandle": "out",
+      "targetHandle": "enable"
+    },
+    {
+      "id": "e-s-draw-get-out-m-swipe-down-block",
+      "source": "s-draw-get",
+      "target": "m-swipe-down",
+      "sourceHandle": "out",
+      "targetHandle": "block"
+    },
+    {
+      "id": "e-fx-swipe-down-video-cam-hands-video",
+      "source": "fx-swipe-down",
+      "target": "cam-hands",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-m-swipe-left-out-fx-swipe-left-trigger",
+      "source": "m-swipe-left",
+      "target": "fx-swipe-left",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-sw-motion-out-m-swipe-left-enable",
+      "source": "sw-motion",
+      "target": "m-swipe-left",
+      "sourceHandle": "out",
+      "targetHandle": "enable"
+    },
+    {
+      "id": "e-s-draw-get-out-m-swipe-left-block",
+      "source": "s-draw-get",
+      "target": "m-swipe-left",
+      "sourceHandle": "out",
+      "targetHandle": "block"
+    },
+    {
+      "id": "e-fx-swipe-left-video-cam-hands-video",
+      "source": "fx-swipe-left",
+      "target": "cam-hands",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-m-swipe-right-out-fx-swipe-right-trigger",
+      "source": "m-swipe-right",
+      "target": "fx-swipe-right",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-sw-motion-out-m-swipe-right-enable",
+      "source": "sw-motion",
+      "target": "m-swipe-right",
+      "sourceHandle": "out",
+      "targetHandle": "enable"
+    },
+    {
+      "id": "e-s-draw-get-out-m-swipe-right-block",
+      "source": "s-draw-get",
+      "target": "m-swipe-right",
+      "sourceHandle": "out",
+      "targetHandle": "block"
+    },
+    {
+      "id": "e-fx-swipe-right-video-cam-hands-video",
+      "source": "fx-swipe-right",
+      "target": "cam-hands",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-m-wave-out-fx-wave-trigger",
+      "source": "m-wave",
+      "target": "fx-wave",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-sw-motion-out-m-wave-enable",
+      "source": "sw-motion",
+      "target": "m-wave",
+      "sourceHandle": "out",
+      "targetHandle": "enable"
+    },
+    {
+      "id": "e-s-draw-get-out-m-wave-block",
+      "source": "s-draw-get",
+      "target": "m-wave",
+      "sourceHandle": "out",
+      "targetHandle": "block"
+    },
+    {
+      "id": "e-fx-wave-video-cam-hands-video",
+      "source": "fx-wave",
+      "target": "cam-hands",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-m-circle-out-fx-circle-trigger",
+      "source": "m-circle",
+      "target": "fx-circle",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-sw-motion-out-m-circle-enable",
+      "source": "sw-motion",
+      "target": "m-circle",
+      "sourceHandle": "out",
+      "targetHandle": "enable"
+    },
+    {
+      "id": "e-s-draw-get-out-m-circle-block",
+      "source": "s-draw-get",
+      "target": "m-circle",
+      "sourceHandle": "out",
+      "targetHandle": "block"
+    },
+    {
+      "id": "e-fx-circle-video-cam-hands-video",
+      "source": "fx-circle",
+      "target": "cam-hands",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-m-push-out-fx-push-trigger",
+      "source": "m-push",
+      "target": "fx-push",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-sw-motion-out-m-push-enable",
+      "source": "sw-motion",
+      "target": "m-push",
+      "sourceHandle": "out",
+      "targetHandle": "enable"
+    },
+    {
+      "id": "e-s-draw-get-out-m-push-block",
+      "source": "s-draw-get",
+      "target": "m-push",
+      "sourceHandle": "out",
+      "targetHandle": "block"
+    },
+    {
+      "id": "e-fx-push-video-cam-hands-video",
+      "source": "fx-push",
+      "target": "cam-hands",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-m-nod-out-fx-nod-trigger",
+      "source": "m-nod",
+      "target": "fx-nod",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-sw-motion-out-m-nod-enable",
+      "source": "sw-motion",
+      "target": "m-nod",
+      "sourceHandle": "out",
+      "targetHandle": "enable"
+    },
+    {
+      "id": "e-fx-nod-video-cam-face-video",
+      "source": "fx-nod",
+      "target": "cam-face",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-m-shake-out-fx-shake-trigger",
+      "source": "m-shake",
+      "target": "fx-shake",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-sw-motion-out-m-shake-enable",
+      "source": "sw-motion",
+      "target": "m-shake",
+      "sourceHandle": "out",
+      "targetHandle": "enable"
+    },
+    {
+      "id": "e-fx-shake-video-cam-face-video",
+      "source": "fx-shake",
+      "target": "cam-face",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-g-temple-out-fx-temple-trigger",
+      "source": "g-temple",
+      "target": "fx-temple",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-fx-temple-video-cam-face-video",
+      "source": "fx-temple",
+      "target": "cam-face",
+      "sourceHandle": "video",
+      "targetHandle": "video"
+    },
+    {
+      "id": "e-g-temple-out-g-draw-block",
+      "source": "g-temple",
+      "target": "g-draw",
+      "sourceHandle": "out",
+      "targetHandle": "block"
+    },
+    {
+      "id": "e-sw-scenes-out-g-fingers-enable",
+      "source": "sw-scenes",
+      "target": "g-fingers",
+      "sourceHandle": "out",
+      "targetHandle": "enable"
+    },
+    {
+      "id": "e-g-fingers-out-act-scene-trigger",
+      "source": "g-fingers",
+      "target": "act-scene",
+      "sourceHandle": "out",
+      "targetHandle": "trigger"
+    },
+    {
+      "id": "e-l-aim-out-g-fingers-block",
+      "source": "l-aim",
+      "target": "g-fingers",
+      "sourceHandle": "out",
+      "targetHandle": "block"
+    },
+    {
+      "id": "e-s-draw-get-out-g-fingers-block",
+      "source": "s-draw-get",
+      "target": "g-fingers",
+      "sourceHandle": "out",
+      "targetHandle": "block"
+    },
+    {
+      "id": "e-g-nose-out-g-fingers-block",
+      "source": "g-nose",
+      "target": "g-fingers",
+      "sourceHandle": "out",
+      "targetHandle": "block"
+    },
+    {
+      "id": "e-g-temple-out-g-fingers-block",
+      "source": "g-temple",
+      "target": "g-fingers",
+      "sourceHandle": "out",
+      "targetHandle": "block"
+    },
+    {
+      "id": "xy-edge__getVar-22ykout-setVar-22yjoff",
+      "source": "getVar-22yk",
+      "target": "setVar-22yj",
+      "sourceHandle": "out",
+      "targetHandle": "off"
+    },
+    {
+      "id": "xy-edge__setVar-22yjout-g-noseblock",
+      "source": "setVar-22yj",
+      "target": "g-nose",
+      "sourceHandle": "out",
+      "targetHandle": "block"
+    }
+  ],
+  "variables": {
+    "drawing": false
+  },
+  "activeCamera": "cam-all",
+  "settings": {
+    "swapHands": false,
+    "smoothing": 0.55,
+    "debug": false,
+    "gaze": false,
+    "claudeBridge": true
+  }
+}

@@ -73,6 +73,57 @@ const pointing = {
     ),
 };
 
+/**
+ * Raised fingers, 0–5 (thumb optional). null when a finger is half bent, so a
+ * wrong number is never reported while the hand is changing shape.
+ */
+export function countFingers(h, withThumb = true, thumbMin = 0.7) {
+  let n = 0;
+  for (const f of [INDEX, MIDDLE, RING, PINKY]) {
+    if (isExtended(h, f)) n++;
+    else if (!isFolded(h, f)) return null;
+  }
+  if (withThumb && thumbOut(h) > thumbMin) n++;
+  return n;
+}
+
+const COUNTS = [opt("any", "Будь-яка (1–5)", "Any (1–5)"), ...[1, 2, 3, 4, 5].map((n) => opt(String(n), String(n), String(n)))];
+
+/** Shows N fingers, held still for a moment. The hit carries `count`. */
+const fingerCount = {
+  kind: "fingerCount",
+  category: "hand",
+  icon: "🔢",
+  title: { uk: "Кількість пальців", en: "Finger count" },
+  params: [
+    sel("count", { uk: "Пальців", en: "Fingers" }, COUNTS, "any"),
+    handParam(),
+    sel("thumb", { uk: "Великий палець", en: "Thumb" }, [opt("count", "Рахувати", "Counts"), opt("ignore", "Не рахувати", "Ignored")], "count"),
+    num("thumbOut", { uk: "Великий палець відставлений >", en: "Thumb counts when out >" }, 0.6, 0.3, 1.5),
+    sel("upright", { uk: "Напрям руки", en: "Hand direction" }, [opt("yes", "Пальцями вгору", "Fingers up"), opt("no", "Будь-який", "Any")], "yes"),
+    num("steadyMs", { uk: "Тримати нерухомо, мс", en: "Hold still, ms" }, 600, 0, 3000, 50),
+  ],
+  hold: 1,
+  grace: 0,
+  detect: ({ hands, now }, p, st, debug) => {
+    st.seen ??= new Map(); // hand id → { n, since, x, y }
+    for (const id of st.seen.keys()) if (!hands.some((h) => h.id === id)) st.seen.delete(id);
+    return forHands(hands, p.hand, (h) => {
+      const n = countFingers(h, p.thumb === "count", p.thumbOut);
+      const c = palmCenter(h);
+      let seen = st.seen.get(h.id);
+      // a new number, or the hand moved → start counting the "hold still" time again
+      if (!seen || seen.n !== n || dist(c, seen) / h.size > 0.35) st.seen.set(h.id, (seen = { n, since: now, x: c.x, y: c.y }));
+      debug.push(`n=${n ?? "?"} ${Math.round(now - seen.since)}ms`);
+      if (!n) return null;
+      if (p.upright === "yes" && !(h.points[MIDDLE.mcp].y < h.points[0].y - 0.5 * h.size)) return null;
+      if (now - seen.since < p.steadyMs) return null;
+      if (p.count !== "any" && Number(p.count) !== n) return null;
+      return { ...c, size: h.size, count: n };
+    });
+  },
+};
+
 const okSign = {
   kind: "okSign",
   category: "hand",
@@ -553,7 +604,7 @@ const switchNode = {
 };
 
 export const GESTURES = [
-  openPalm, fist, fistToOpen, pointing, okSign, pinch, shaka, modelGesture, twoPalms,
+  openPalm, fist, fistToOpen, pointing, fingerCount, okSign, pinch, shaka, modelGesture, twoPalms,
   wink, eyesClosed, brows, mouth, headTurn, gaze, blendshape,
   touchFace, fingerToTemple, facepalm,
   propOnHead, propInHand,

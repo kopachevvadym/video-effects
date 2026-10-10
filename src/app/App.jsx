@@ -11,7 +11,11 @@ import { useWebMcp, webMcpAvailable } from "./webmcp.js";
 import { useTheme } from "./theme.jsx";
 import { useClaudeBridge } from "./bridge.js";
 import { useProgramStream } from "./programStream.js";
-import { loadGraph, saveGraph, defaultGraph, downloadJson, readJsonFile, serialize } from "./storage.js";
+import { resolveCamera } from "../graph/effects.js";
+import { RulesView } from "./rules.jsx";
+import { PresetsPanel, useCurrentPreset, fingerprint } from "./presets.jsx";
+import { sceneBadge } from "../runtime/effects/motionFx.js";
+import { loadGraph, saveGraph, defaultGraph, downloadJson, readJsonFile, serialize, fromJson } from "./storage.js";
 
 const initial = loadGraph();
 const DEFAULT_SETTINGS = { swapHands: false, smoothing: 0.55, debug: false, gaze: false, claudeBridge: true };
@@ -29,6 +33,19 @@ export default function App() {
   const [popover, setPopover] = useState(null); // "settings" | "obs" | null
   const [showPalette, setShowPalette] = useState(true);
   const [previewCamera, setPreviewCamera] = useState(initial.activeCamera ?? null);
+  const [view, setViewState] = useState(() => {
+    try {
+      return localStorage.getItem("gesture-flow-view") === "rules" ? "rules" : "editor";
+    } catch {
+      return "editor";
+    }
+  });
+  const setView = (v) => {
+    setViewState(v);
+    try {
+      localStorage.setItem("gesture-flow-view", v);
+    } catch {}
+  };
   const obsState = useObs();
   const program = useProgramStream();
   const programViewers = program.viewers;
@@ -50,6 +67,9 @@ export default function App() {
 
   // push graph changes to the engine (debounced) and autosave
   const graph = useMemo(() => ({ nodes, edges, variables, activeCamera, settings }), [nodes, edges, variables, activeCamera, settings]);
+  const serialized = useMemo(() => serialize(graph), [graph]);
+  const [currentPreset, setCurrentPreset] = useCurrentPreset();
+  const presetDirty = useMemo(() => !!currentPreset && currentPreset.fp !== fingerprint(serialized), [currentPreset, serialized]);
   useEffect(() => {
     const id = setTimeout(() => {
       runtime.setGraph(serialize(graph));
@@ -74,6 +94,28 @@ export default function App() {
     },
     [nodes],
   );
+
+  // "Switch camera" action nodes (e.g. show 1–5 fingers) → change the active camera
+  const actionRef = useRef(null);
+  actionRef.current = (a) => {
+    if (a.type !== "camera") return;
+    const cams = cameraNodes.map((c) => ({ id: c.id, hotkey: String(c.data.params?.hotkey ?? "") }));
+    const id = resolveCamera(cams, activeCamera, a.params.target, a.hit?.count);
+    if (!id) return;
+    if (id !== activeCamera) setActiveCamera(id);
+    if (a.params.showName) {
+      const cam = cameraNodes.find((c) => c.id === id);
+      const key = cam.data.params?.hotkey;
+      const name = N(cam.data.params?.name) || t("camera");
+      runtime.outputs.get(id)?.fx.add(sceneBadge(key ? `${key} · ${name}` : name));
+    }
+  };
+  useEffect(() => {
+    engine.onAction = (a) => actionRef.current?.(a);
+    return () => {
+      engine.onAction = null;
+    };
+  }, []);
 
   // Alt+1…9 switches the active camera
   useEffect(() => {
@@ -176,6 +218,7 @@ export default function App() {
   );
 
   const selected = nodes.find((n) => n.selected) ?? null;
+  const selectNode = useCallback((id) => setNodes((ns) => ns.map((n) => (n.selected === (n.id === id) ? n : { ...n, selected: n.id === id }))), [setNodes]);
 
   // AI agents: in the browser (WebMCP) and Claude Desktop / Code (local MCP server bridge)
   const agentApi = {
@@ -237,6 +280,14 @@ export default function App() {
             ☰
           </button>
           <strong className="brand">{t("appTitle")}</strong>
+          <div className="view-switch" role="tablist" aria-label={L({ uk: "Вигляд", en: "View" })}>
+            <button role="tab" aria-selected={view === "editor"} className={view === "editor" ? "active" : ""} onClick={() => setView("editor")}>
+              ✎ {L({ uk: "Редактор", en: "Editor" })}
+            </button>
+            <button role="tab" aria-selected={view === "rules"} className={view === "rules" ? "active" : ""} onClick={() => setView("rules")}>
+              ☰ {L({ uk: "Правила", en: "Rules" })}
+            </button>
+          </div>
           <span className={`status-pill ${statusOk ? "ok" : status.key.endsWith("Error") ? "err" : ""}`} title={statusText}>
             {statusText}
             {statusOk && ` · ${Math.round(runtime.fps)} fps`}
@@ -267,6 +318,28 @@ export default function App() {
               {t("obs")}
             </button>
             {popover === "obs" && <ObsPanel viewers={programViewers} />}
+          </div>
+          <div className="pop-wrap">
+            <button
+              className={presetDirty ? "dirty" : ""}
+              onClick={() => setPopover(popover === "presets" ? null : "presets")}
+              title={L({ uk: "Збережені налаштування", en: "Saved setups" })}
+            >
+              💾 {currentPreset?.name ?? L({ uk: "Зберегти", en: "Save" })}
+              {presetDirty && <span className="dirty-dot" aria-label={L({ uk: "є незбережені зміни", en: "unsaved changes" })} />}
+            </button>
+            {popover === "presets" && (
+              <PresetsPanel
+                serialized={serialized}
+                current={currentPreset}
+                setCurrent={setCurrentPreset}
+                onLoad={(json) => {
+                  const g = fromJson(json);
+                  replaceGraph(g);
+                  return serialize({ nodes: g.nodes, edges: g.edges, variables: g.variables ?? {}, activeCamera: g.activeCamera ?? null, settings: { ...DEFAULT_SETTINGS, ...(g.settings ?? settings) } });
+                }}
+              />
+            )}
           </div>
           <div className="pop-wrap">
             <button onClick={() => setPopover(popover === "settings" ? null : "settings")}>⚙ {t("settings")}</button>
@@ -317,7 +390,7 @@ export default function App() {
         </header>
 
         <div className="workspace">
-          {showPalette && <Palette onAdd={(k) => addNode(k)} />}
+          {showPalette && view === "editor" && <Palette onAdd={(k) => addNode(k)} />}
           <main className="canvas" onDragOver={(e) => e.preventDefault()} onDrop={onDrop} onClick={() => popover && setPopover(null)}>
             <ReactFlow
               nodes={nodes}
@@ -341,6 +414,26 @@ export default function App() {
               <Controls />
               <MiniMap pannable zoomable nodeColor={(n) => CATEGORIES[CATALOG[n.data.kind]?.category]?.color ?? "#888"} maskColor={theme === "dark" ? "rgba(10,12,16,0.7)" : "rgba(240,242,246,0.7)"} />
             </ReactFlow>
+            {view === "rules" && (
+              <RulesView
+                nodes={nodes}
+                edges={edges}
+                activeCamera={activeCamera}
+                selectedId={selected?.id}
+                onSelect={selectNode}
+                onOpen={(id, related) => {
+                  selectNode(id);
+                  setView("editor");
+                  setTimeout(() => flow.fitView({ nodes: [id, ...related].map((x) => ({ id: x })), padding: 0.35, maxZoom: 1.1, duration: 300 }), 60);
+                }}
+                onToggleSwitch={(id) => {
+                  const n = nodes.find((x) => x.id === id);
+                  if (n) updateParams(id, { ...(n.data.params ?? {}), on: n.data.params?.on === false });
+                }}
+                onTest={(id) => engine.test(id, performance.now())}
+                onParams={updateParams}
+              />
+            )}
           </main>
           <div className="panel right-col">
             {(() => {

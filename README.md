@@ -29,6 +29,10 @@ Requires Node.js 18+. If macOS refuses to run `start.command`: right-click → O
 
 Live status: a yellow dot and glowing links show signals that are on; the progress bar shows how long a gesture has been held. *Settings → Show hand and face points* also prints each node's measured values (e.g. `pinch=0.22`) for tuning thresholds.
 
+**Rules view** (the *Editor / Rules* switch in the top bar) lists every reaction as a readable card: what triggers it (combinations, sequences and timing spelled out), *only if* / *not while* conditions, how to turn on a state it needs, which cameras show it, and timing (once / continuous, delay, cooldown). Each card says whether it is available right now; gestures light up while they are detected. Switches can be flipped there, cards can be tested, and *Open in editor* jumps to the nodes. **⚙ Edit** on a card (or a click on any gesture / condition in it) opens the settings of every node in that rule right in the card; changes apply immediately.
+
+**Saved setups** (💾 in the top bar): save the whole setup under a name and load it back later — nodes, links, values, states, active camera and settings. They are JSON files in `presets/` in the project folder (written by the dev server, local requests only), so they survive clearing the browser and can be committed. The button shows the current setup and a yellow dot when there are unsaved changes. Without the dev server they are kept in the browser.
+
 The graph autosaves in the browser. The **⋯** menu has **Export / Import** (JSON) and **Reset** (restores the default graph).
 
 ## Motions
@@ -47,6 +51,10 @@ Gesture nodes look at one frame (a pose). **Motion** nodes look at the last frac
 Distances are measured in palm widths, so a swipe works the same close to the camera and far from it. To get **different reactions per direction**, add one *Hand swipe* node per direction. After a swipe, the hand's way back (the opposite direction within 0.6 s) is ignored, so swiping up does not also fire "down".
 
 Two reactions are made for motions: **Swipe swoosh** (a glowing streak along the actual path of the hand; gold / blue / pink / green per direction unless a color is set) and **Text / emoji** (any text, e.g. `👋 Hi!`).
+
+## Switching cameras with fingers
+
+*Finger count* fires when you show 1–5 fingers (thumb optional) and hold the hand still for a moment (0.6 s by default, fingers up). The *Switch camera (scene)* action then makes the camera with that `Alt+N` hotkey active — the same as pressing the hotkey, including the OBS scene set on that camera. It can also go to the next / previous camera or a fixed one. The camera's name flashes at the top of the frame. Changing the number of fingers switches again; keeping them up does not. In the default graph it is paused while aiming the laser, drawing, or touching the nose / temple.
 
 ## Objects (hats & co.)
 
@@ -121,8 +129,9 @@ The same tools are registered with [WebMCP](https://developer.chrome.com/docs/ai
 | 🔄 Circle with the index finger | Portal | Hands |
 | 🫸 Push toward the camera | Small explosion | Hands |
 | 🙂 Nod / shake the head | "✓ Yes" / "✗ No" | Face |
+| 🔢 Show 1–5 fingers, held still | Switch to the camera with `Alt+1…5` | — |
 
-Switches: **Mouth** (`M`) → the three mouth gestures, **Hat** → the 🤟 hat gesture, **Motions** (`N`) → all motion nodes. Hand motions also pause while `drawing` is on.
+Switches: **Mouth** (`M`) → the three mouth gestures, **Hat** → the 🤟 hat gesture, **Motions** (`N`) → all motion nodes, **Scenes** (`S`) → switching cameras with fingers. Hand motions also pause while `drawing` is on.
 
 Cameras: **Hands** (`Alt+1`), **Face** (`Alt+2`) and **All together** (`Alt+3`, merges the two, active by default).
 

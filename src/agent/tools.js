@@ -59,6 +59,9 @@ Signal flow: gesture nodes → (logic / timing / state nodes) → reaction nodes
   Params: anchor (gesture|nose|forehead|mouth|leftEye|rightEye|center), scale, intensity, hue (0-360 or null),
   delayMs, cooldownMs, chance (one-shot only). Continuous ones run while the input is on.
   swoosh draws a glowing streak along a swipe (colour per direction unless hue is set); textPop shows params.text.
+  switchCamera is an action (no video output): makes another camera active — target fingers (camera whose
+  hotkey = hit.count from a fingerCount gesture), next, prev or "1".."9". fingerCount (count any|1..5, thumb,
+  upright, steadyMs) fires once the finger count is held still.
   spawnProp creates an object (topHat, partyHat, crown, sunglasses, mustache) in hand / on head; clearProps removes them.
 - Cameras (kind "camera"): input video accepts reactions and other cameras (merging them). One camera is active
   (sent to the OBS window); params name, resolution, background, hotkey (Alt+N), obsScene.
@@ -249,7 +252,7 @@ export const TOOLS = [
       const g = ctx.api.addNode(gesture, undefined, gestureParams);
       const r = ctx.api.addNode(reaction, undefined, reactionParams);
       ctx.api.connect({ source: g, target: r, sourceHandle: "out", targetHandle: "trigger" });
-      if (cam) ctx.api.connect({ source: r, target: cam.id, sourceHandle: "video", targetHandle: "video" });
+      if (cam && !CATALOG[reaction].action) ctx.api.connect({ source: r, target: cam.id, sourceHandle: "video", targetHandle: "video" });
       return `Created ${g} → ${r}${cam ? ` → ${cam.id}` : " (no camera found)"}`;
     },
   },

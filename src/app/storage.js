@@ -13,6 +13,7 @@ const KEY = "gesture-flow-graph-v1";
 const MIGRATIONS = [
   { id: "motions-1", nodes: (id) => id === "sw-motion" || /^(m|fx)-(swipe|wave|circle|push|nod|shake)/.test(id) },
   { id: "temple-1", nodes: (id) => id === "g-temple" || id === "fx-temple" },
+  { id: "scenes-1", nodes: (id) => ["sw-scenes", "g-fingers", "act-scene"].includes(id) },
 ];
 
 function migrate(graph) {
@@ -56,6 +57,9 @@ export function loadGraph() {
 }
 
 export const defaultGraph = () => hydrate(createDefaultGraph());
+
+/** A saved / imported graph → ready for the editor (applies migrations). */
+export const fromJson = (obj) => hydrate(migrate(obj));
 
 /** Strip React Flow runtime fields before saving. */
 export function serialize({ nodes, edges, variables, activeCamera, settings }) {

@@ -2,10 +2,10 @@
 import { useI18n } from "./i18n.jsx";
 import { useVars } from "./core.js";
 
-export function ParamField({ param, value, onChange, obsScenes = [] }) {
+export function ParamField({ param, value, onChange, obsScenes = [], idPrefix = "" }) {
   const { L, t } = useI18n();
   const vars = useVars();
-  const id = `p-${param.key}`;
+  const id = `p-${idPrefix}-${param.key}`;
   let input;
 
   switch (param.type) {

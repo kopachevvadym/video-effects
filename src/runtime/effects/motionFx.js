@@ -1,7 +1,7 @@
 // Effects made for motion nodes: a glowing swoosh along the swipe path, and a
 // free-text / emoji pop-up.
 import { rand } from "../geometry.js";
-import { count } from "../fx.js";
+import { count, view } from "../fx.js";
 import { scaleFromHand, sparkleShape } from "./shapes.js";
 import { popText } from "./faceFx.js";
 
@@ -189,3 +189,9 @@ export const mindWaves = {
     for (let i = 0; i < count(14, hit); i++) fx.add(thought(hit.x, hit.y, angle, k, hue));
   },
 };
+
+/** Big name of the camera that just became active, at the top of the frame. */
+export function sceneBadge(text) {
+  const k = Math.max(0.6, view.H / 720);
+  return popText({ text, x: view.W / 2, y: view.H * 0.13, k, fill: "#ffffff", size: 64, life: 1.5, rise: 0 });
+}

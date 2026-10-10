@@ -9,6 +9,7 @@ const KNOWN = [
   { en: "Hat", uk: "Капелюх" },
   { en: "drawing", uk: "малювання" },
   { en: "Motions", uk: "Рухи" },
+  { en: "Scenes", uk: "Сцени" },
   { en: "👋 Hi!", uk: "👋 Привіт!" },
   { en: "✓ Yes", uk: "✓ Так" },
   { en: "✗ No", uk: "✗ Ні" },

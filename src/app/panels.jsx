@@ -61,9 +61,49 @@ export function Palette({ onAdd }) {
 
 // ---------- inspector ----------
 
-export function Inspector({ node, onParams, onDelete, onDuplicate }) {
-  const { L, t, N } = useI18n();
+/** All parameter fields of one node (+ hold / grace for gestures). Used by the inspector and the Rules view. */
+export function NodeParams({ node, onParams, compact = false }) {
+  const { t, N } = useI18n();
   const obsState = useObs();
+  const def = CATALOG[node.data.kind];
+  const params = node.data.params ?? {};
+  const set = (key, v) => onParams(node.id, { ...params, [key]: v });
+  const isGesture = nodeTypeOf(def) === "gesture";
+  return (
+    <div className={`params ${compact ? "compact" : ""}`}>
+      {(def.params ?? []).map((p) => (
+        <ParamField
+          key={p.key}
+          idPrefix={node.id}
+          param={p}
+          value={p.type === "text" ? N(params[p.key] ?? p.default) : params[p.key] ?? p.default}
+          onChange={(v) => set(p.key, v)}
+          obsScenes={obsState.scenes}
+        />
+      ))}
+      {isGesture && (
+        <>
+          <ParamField
+            idPrefix={node.id}
+            param={{ key: "hold", type: "number", label: t("hold"), min: 1, max: 90, step: 1, default: def.hold ?? 6 }}
+            value={params.hold ?? def.hold ?? 6}
+            onChange={(v) => set("hold", v)}
+          />
+          <ParamField
+            idPrefix={node.id}
+            param={{ key: "grace", type: "number", label: t("grace"), min: 0, max: 15, step: 1, default: def.grace ?? 2 }}
+            value={params.grace ?? def.grace ?? 2}
+            onChange={(v) => set("grace", v)}
+          />
+          {!compact && <p className="hint">{t("holdHint")}</p>}
+        </>
+      )}
+    </div>
+  );
+}
+
+export function Inspector({ node, onParams, onDelete, onDuplicate }) {
+  const { L, t } = useI18n();
   if (!node) {
     return (
       <aside className="inspector">
@@ -74,40 +114,12 @@ export function Inspector({ node, onParams, onDelete, onDuplicate }) {
     );
   }
   const def = CATALOG[node.data.kind];
-  const params = node.data.params ?? {};
-  const set = (key, v) => onParams(node.id, { ...params, [key]: v });
-  const isGesture = nodeTypeOf(def) === "gesture";
   return (
     <aside className="inspector">
       <h2>
         <span style={{ color: CATEGORIES[def.category].color }}>{def.icon}</span> {L(def.title)}
       </h2>
-      <div className="params">
-        {(def.params ?? []).map((p) => (
-          <ParamField
-            key={p.key}
-            param={p}
-            value={p.type === "text" ? N(params[p.key] ?? p.default) : params[p.key] ?? p.default}
-            onChange={(v) => set(p.key, v)}
-            obsScenes={obsState.scenes}
-          />
-        ))}
-        {isGesture && (
-          <>
-            <ParamField
-              param={{ key: "hold", type: "number", label: t("hold"), min: 1, max: 90, step: 1, default: def.hold ?? 6 }}
-              value={params.hold ?? def.hold ?? 6}
-              onChange={(v) => set("hold", v)}
-            />
-            <ParamField
-              param={{ key: "grace", type: "number", label: t("grace"), min: 0, max: 15, step: 1, default: def.grace ?? 2 }}
-              value={params.grace ?? def.grace ?? 2}
-              onChange={(v) => set("grace", v)}
-            />
-            <p className="hint">{t("holdHint")}</p>
-          </>
-        )}
-      </div>
+      <NodeParams node={node} onParams={onParams} />
       <div className="row-btns">
         <button onClick={() => onDuplicate(node.id)}>{t("duplicate")}</button>
         <button className="danger" onClick={() => onDelete(node.id)}>

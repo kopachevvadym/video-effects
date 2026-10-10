@@ -119,7 +119,50 @@ const clearProps = {
   ],
 };
 
-export const EFFECTS = [...VISUAL, spawnProp, clearProps];
+// ---------- actions ----------
+
+const SCENE_TARGETS = [
+  opt("fingers", "За кількістю пальців (камера з Alt+N)", "By finger count (camera with Alt+N)"),
+  opt("next", "Наступна", "Next"),
+  opt("prev", "Попередня", "Previous"),
+  ...[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => opt(String(n), `Камера з Alt+${n}`, `Camera with Alt+${n}`)),
+];
+
+/** Makes another camera active (and switches its OBS scene, if set). Not visual: no video output. */
+const switchCamera = {
+  kind: "switchCamera",
+  category: "effect",
+  icon: "🎬",
+  title: { uk: "Перемкнути камеру (сцену)", en: "Switch camera (scene)" },
+  continuous: false,
+  action: "camera",
+  params: [
+    { key: "target", type: "select", label: { uk: "На яку", en: "To" }, options: SCENE_TARGETS, default: "fingers" },
+    { key: "showName", type: "bool", label: { uk: "Показати назву в кадрі", en: "Show its name on screen" }, default: true },
+    { key: "delayMs", type: "number", label: { uk: "Затримка, мс", en: "Delay, ms" }, default: 0, min: 0, max: 10000, step: 50 },
+    { key: "cooldownMs", type: "number", label: { uk: "Пауза, мс", en: "Cooldown, ms" }, default: 1200, min: 0, max: 20000, step: 100 },
+  ],
+};
+
+/**
+ * Which camera a switchCamera action means.
+ * @param cameras [{ id, hotkey }] in display order
+ */
+export function resolveCamera(cameras, activeId, target, count) {
+  const withKey = cameras.filter((c) => c.hotkey).sort((a, b) => Number(a.hotkey) - Number(b.hotkey));
+  if (target === "fingers" && count == null) target = "next"; // e.g. the ▶ Test button
+  if (target === "next" || target === "prev") {
+    const list = withKey.length ? withKey : cameras;
+    if (!list.length) return null;
+    const i = list.findIndex((c) => c.id === activeId);
+    const step = target === "next" ? 1 : -1;
+    return list[(i + step + list.length) % list.length].id;
+  }
+  const key = target === "fingers" ? String(count ?? "") : String(target);
+  return withKey.find((c) => c.hotkey === key)?.id ?? null;
+}
+
+export const EFFECTS = [...VISUAL, spawnProp, clearProps, switchCamera];
 
 // ---------- camera output ----------
 

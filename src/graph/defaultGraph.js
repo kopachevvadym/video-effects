@@ -146,6 +146,16 @@ export function createDefaultGraph() {
   toCam("fx-temple", "cam-face");
   edge("g-temple", "g-draw", "out", "block"); // a finger at the temple shouldn't draw
 
+  // ---------- scenes: show 1–5 fingers (held still, fingers up) → the camera with Alt+N ----------
+  node("sw-scenes", "switch", "logic", row, { label: uk ? "Сцени" : "Scenes", on: true, key: "KeyS" });
+  node("g-fingers", "fingerCount", "gesture", row, { count: "any" });
+  node("act-scene", "switchCamera", "effect", row++, { target: "fingers" });
+  edge("sw-scenes", "g-fingers", "out", "enable");
+  edge("g-fingers", "act-scene");
+  // don't switch while aiming the laser, drawing, or with a finger on the nose / temple
+  for (const src of ["l-aim", "s-draw-get", "g-nose", "g-temple"]) edge(src, "g-fingers", "out", "block");
+  row += 1;
+
   // ---------- motions (movement over time, not a pose) ----------
   // One switch (key N) turns every motion off; they also pause while drawing,
   // because drawing moves the hand a lot.
@@ -173,7 +183,7 @@ export function createDefaultGraph() {
 
   return {
     version: 1,
-    migrations: ["motions-1", "temple-1"],
+    migrations: ["motions-1", "temple-1", "scenes-1"],
     nodes,
     edges,
     variables: { drawing: false },

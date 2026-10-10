@@ -26,6 +26,7 @@ export class GraphEngine {
     this.status = new Map();
     this.vars = new Map();
     this.manual = new Map(); // nodeId → until timestamp (test button)
+    this.onAction = null; // (action) => void, set by the app
   }
 
   /** (Re)load a graph. Node state survives if the node kept its id and kind. */
@@ -262,6 +263,11 @@ export class GraphEngine {
     if (p.hue != null) hit.hue = p.hue;
     if (p.text != null) hit.text = localizeName(p.text, runtimeLang.current);
 
+    if (n.def.action) {
+      // non-visual actions (e.g. switching the active camera) are carried out by the app
+      this.onAction?.({ type: n.def.action, node: n.id, params: p, hit });
+      return;
+    }
     if (n.def.kind === "spawnProp") {
       world.props?.spawn({ type: p.type, place: p.place, hit, outputs: cams, release: p.release, replace: true }, world);
       return;
